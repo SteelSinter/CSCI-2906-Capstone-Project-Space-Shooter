@@ -1,4 +1,5 @@
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javafx.application.Application;
@@ -13,8 +14,9 @@ public class Main extends Application {
 	public Player player;
 	public Pane background;
 	public Scene scene;
-	public HashMap<KeyCode, Boolean> keys = new HashMap<>();
-	public boolean gameRunning = true;
+	public static HashMap<KeyCode, Boolean> keys = new HashMap<>();
+	public static boolean gamePaused = false;
+	public static ArrayList<GameObject> objects = new ArrayList<GameObject>();
 
 	@Override
 	public void start(Stage mainStage) {
@@ -32,19 +34,14 @@ public class Main extends Application {
 	}
 	
 	public void initalize() {
+		// Initialize hashmap
 		keys.put(KeyCode.W, false);
 		keys.put(KeyCode.A, false);
 		keys.put(KeyCode.S, false);
 		keys.put(KeyCode.D, false);
 		keys.put(KeyCode.SPACE, false);
-		setupKeybinds();
-		player = new Player();
-		background.getChildren().add(player);
-		System.out.println("Player added to scene.");
 		
-	}
-	
-	public void setupKeybinds() {
+		// Setup key events
 		scene.setOnKeyPressed(e -> {
 			try {
 				keys.put(e.getCode(), true);
@@ -62,6 +59,13 @@ public class Main extends Application {
 				ex.printStackTrace();
 			}
 		});
+		
+		addObject(new Player());
+		System.out.println("Player added to scene.");
+	}
+	
+	public void addObject(GameObject o) {
+		background.getChildren().add(o);
 	}
 	
 	public static void main(String[] args) {
@@ -72,14 +76,23 @@ public class Main extends Application {
 }
 
 class Game extends Thread {
+	private final int FPS = 60;
 	@Override
 	public void run() {
-		while (Game running) {
-			
+		System.out.println("Game loop started");
+		while (!Main.gamePaused) {
+			updateGame();
+			try {
+				Thread.sleep(1000 / FPS);
+			} catch (InterruptedException ex) {
+				ex.printStackTrace();
+			}
 		}
 	}
 	
-	public void getInput() {
-		
+	public void updateGame() {
+		for (GameObject o: Main.objects) {
+			o.update();
+		}
 	}
 }
