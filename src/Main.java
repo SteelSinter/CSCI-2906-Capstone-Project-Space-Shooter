@@ -94,6 +94,7 @@ class Game extends Thread {
 	public void updateGame() {
 		for (GameObject o: Main.gameObjects) {
 			o.update();
+			o.draw();
 		}
 	}
 }

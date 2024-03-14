@@ -12,6 +12,9 @@ public class Player extends GameObject {
 	}
 	
 	public void update() {
+		if (Main.keys.get(KeyCode.SPACE)) {
+			shoot();
+		}
 		
 		printStatus();
 	}
@@ -29,13 +32,10 @@ public class Player extends GameObject {
 		if (Main.keys.get(KeyCode.D)) {
 			this.setX(this.getX() + 1 * speedMultiplier);
 		}
-		if (Main.keys.get(KeyCode.SPACE)) {
-			shoot();
-		}
 	}
 	
 	public void shoot() {
-		System.out.println(this.getParent());
+		Main.
 	}
 	
 	public void printStatus() {
