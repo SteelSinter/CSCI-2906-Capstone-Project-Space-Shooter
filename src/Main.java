@@ -16,7 +16,7 @@ public class Main extends Application {
 	public Scene scene;
 	public static HashMap<KeyCode, Boolean> keys = new HashMap<>();
 	public static boolean gamePaused = false;
-	public static ArrayList<GameObject> objects = new ArrayList<GameObject>();
+	public static ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
 
 	@Override
 	public void start(Stage mainStage) {
@@ -66,6 +66,7 @@ public class Main extends Application {
 	
 	public void addObject(GameObject o) {
 		background.getChildren().add(o);
+		gameObjects.add(o);
 	}
 	
 	public static void main(String[] args) {
@@ -91,7 +92,7 @@ class Game extends Thread {
 	}
 	
 	public void updateGame() {
-		for (GameObject o: Main.objects) {
+		for (GameObject o: Main.gameObjects) {
 			o.update();
 		}
 	}
