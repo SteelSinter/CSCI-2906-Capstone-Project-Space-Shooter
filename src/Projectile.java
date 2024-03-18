@@ -22,16 +22,16 @@ public class Projectile extends GameObject {
 	void draw() {
 		switch (direction) {
 		case UP:
-			this.setY(this.getY() - 1 * speedMultiplier);
+			setY(getY() - 1 * speedMultiplier);
 			break;
 		case DOWN:
-			this.setY(this.getY() + 1 * speedMultiplier);
+			setY(getY() + 1 * speedMultiplier);
 			break;
 		case LEFT:
-			this.setX(this.getX() - 1 * speedMultiplier);
+			setX(getX() - 1 * speedMultiplier);
 			break;
 		case RIGHT:
-			this.setX(this.getX() + 1 * speedMultiplier);
+			setX(getX() + 1 * speedMultiplier);
 			break;
 		}
 		

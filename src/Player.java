@@ -23,16 +23,16 @@ public class Player extends GameObject {
 	
 	public void draw() {
 		if (Main.keys.get(KeyCode.W)) {
-			this.setY(this.getY() - 1 * speedMultiplier);
+			setY(getY() - 1 * speedMultiplier);
 		}
 		if (Main.keys.get(KeyCode.A)) {
-			this.setX(this.getX() - 1 * speedMultiplier);
+			setX(getX() - 1 * speedMultiplier);
 		}
 		if (Main.keys.get(KeyCode.S)) {
-			this.setY(this.getY() + 1 * speedMultiplier);
+			setY(getY() + 1 * speedMultiplier);
 		}
 		if (Main.keys.get(KeyCode.D)) {
-			this.setX(this.getX() + 1 * speedMultiplier);
+			setX(getX() + 1 * speedMultiplier);
 		}
 	}
 	
