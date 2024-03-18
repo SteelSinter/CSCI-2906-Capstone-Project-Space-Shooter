@@ -1,14 +1,16 @@
+import java.util.ConcurrentModificationException;
+
+import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 
 public class Player extends GameObject {
-	private double speedMultiplier = 1.5;
-	Image image = new Image("sprites/spr_player.png");
-	//private static ArrayList controls
 	
 	Player() {
-		setImage(image);
+		super();
+		speedMultiplier = 1.5;
+		setImage(new Image("sprites/spr_player.png"));
 	}
 	
 	public void update() {
@@ -35,7 +37,16 @@ public class Player extends GameObject {
 	}
 	
 	public void shoot() {
-		Main.
+		Platform.runLater(() -> {
+			try {
+				Main.addObject(new Projectile(Direction.RIGHT, getX(), getY()));
+			} catch (ConcurrentModificationException ex) {
+				// Don't worry about it
+			} catch (Exception ex) {
+				// Do nothing
+			}
+		});
+		
 	}
 	
 	public void printStatus() {

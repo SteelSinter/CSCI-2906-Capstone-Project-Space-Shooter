@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 	public Player player;
-	public Pane background;
+	public static Pane background;
 	public Scene scene;
 	public static HashMap<KeyCode, Boolean> keys = new HashMap<>();
 	public static boolean gamePaused = false;
@@ -64,7 +64,7 @@ public class Main extends Application {
 		System.out.println("Player added to scene.");
 	}
 	
-	public void addObject(GameObject o) {
+	public static void addObject(GameObject o) {
 		background.getChildren().add(o);
 		gameObjects.add(o);
 	}
