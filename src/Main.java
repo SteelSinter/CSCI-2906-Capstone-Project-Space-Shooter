@@ -1,6 +1,9 @@
 import java.io.File;
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -69,6 +72,11 @@ public class Main extends Application {
 		gameObjects.add(o);
 	}
 	
+	public static void removeObject(GameObject o) {
+		background.getChildren().remove(o);
+		gameObjects.remove(o);
+	}
+	
 	public static void main(String[] args) {
 		Application.launch(args);
 
@@ -78,6 +86,7 @@ public class Main extends Application {
 
 class Game extends Thread {
 	private final int FPS = 60;
+	Lock lock = new ReentrantLock();
 	@Override
 	public void run() {
 		System.out.println("Game loop started");
@@ -97,4 +106,4 @@ class Game extends Thread {
 			o.draw();
 		}
 	}
-}
+}         

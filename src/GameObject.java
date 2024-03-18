@@ -10,4 +10,8 @@ abstract class GameObject extends ImageView {
 	
 	abstract void draw();
 	
+	boolean offScreen() {
+		// TODO: Redefine offscreen check to check center of sprite
+		return (getX() > Main.background.getWidth() || getY() > Main.background.getHeight() || getX() <= 0 || getY() <= 0);
+	}
 }

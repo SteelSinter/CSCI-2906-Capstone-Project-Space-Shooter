@@ -35,6 +35,9 @@ public class Projectile extends GameObject {
 			break;
 		}
 		
+		if (offScreen())
+			Main.removeObject(this);
+		
 	}
 
 }
