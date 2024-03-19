@@ -3,9 +3,12 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -16,10 +19,10 @@ import javafx.stage.Stage;
 public class Main extends Application {
 	public Player player;
 	public static Pane background;
-	public Scene scene;
-	public static HashMap<KeyCode, Boolean> keys = new HashMap<>();
+	public static Scene scene;
 	public static boolean gamePaused = false;
-	public static ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
+	public static Game game;
+	
 
 	@Override
 	public void start(Stage mainStage) {
@@ -27,54 +30,26 @@ public class Main extends Application {
 		scene = new Scene(background, 700, 500);
 		scene.setFill(new ImagePattern(new Image("sprites/Space.jpg")));
 		
-		initalize();
-		
 		mainStage.setScene(scene);
 		mainStage.setTitle("Space Shooter");
 		mainStage.show();
 		
-		new Game().start(); // start game thread
-	}
-	
-	public void initalize() {
-		// Initialize hashmap
-		keys.put(KeyCode.W, false);
-		keys.put(KeyCode.A, false);
-		keys.put(KeyCode.S, false);
-		keys.put(KeyCode.D, false);
-		keys.put(KeyCode.SPACE, false);
+		game = new Game();
 		
-		// Setup key events
-		scene.setOnKeyPressed(e -> {
-			try {
-				keys.put(e.getCode(), true);
-			}
-			catch (Exception ex){
-				ex.printStackTrace();
-			}
-		});
-		
-		scene.setOnKeyReleased(e -> {
-			try {
-				keys.put(e.getCode(), false);
-			}
-			catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		});
-		
-		addObject(new Player());
-		System.out.println("Player added to scene.");
+		game.start(); // start game thread
 	}
 	
 	public static void addObject(GameObject o) {
 		background.getChildren().add(o);
-		gameObjects.add(o);
+		
 	}
 	
 	public static void removeObject(GameObject o) {
 		background.getChildren().remove(o);
-		gameObjects.remove(o);
+	}
+	
+	public static Game getGame() {
+		return game;
 	}
 	
 	public static void main(String[] args) {
@@ -86,9 +61,38 @@ public class Main extends Application {
 
 class Game extends Thread {
 	private final int FPS = 60;
-	Lock lock = new ReentrantLock();
+	private final ReadWriteLock lock = new ReentrantReadWriteLock();
+	public HashMap<KeyCode, Boolean> keys = new HashMap<>();
+	public ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
 	@Override
 	public void run() {
+		keys.put(KeyCode.W, false);
+		keys.put(KeyCode.A, false);
+		keys.put(KeyCode.S, false);
+		keys.put(KeyCode.D, false);
+		keys.put(KeyCode.SPACE, false);
+		
+		// Setup key events
+		Main.scene.setOnKeyPressed(e -> {
+			try {
+				keys.put(e.getCode(), true);
+			}
+			catch (Exception ex){
+				ex.printStackTrace();
+			}
+		});
+		
+		Main.scene.setOnKeyReleased(e -> {
+			try {
+				keys.put(e.getCode(), false);
+			}
+			catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		});
+		
+		addObject(new Player());
+		System.out.println("Player added to scene.");
 		System.out.println("Game loop started");
 		while (!Main.gamePaused) {
 			updateGame();
@@ -101,9 +105,48 @@ class Game extends Thread {
 	}
 	
 	public void updateGame() {
-		for (GameObject o: Main.gameObjects) {
-			o.update();
-			o.draw();
+		try {
+			lock.readLock().lock();
+			for (GameObject o: gameObjects) {
+				if (o == null)
+					continue;
+				o.update();
+				o.draw();
+			}
+		} catch (NullPointerException ex) {
+			System.out.println("Null pointer exception");
+		} finally {
+			lock.readLock().unlock();
 		}
+		
+	}
+	
+	public void addObject(GameObject o) {
+		new Thread(() -> {
+			lock.writeLock().lock();
+			try {
+				gameObjects.add(o);
+				Platform.runLater(() -> {
+					Main.addObject(o);
+				});
+			} finally {
+				lock.writeLock().unlock();
+			}
+		}).start();
+		
+		
+	}
+	public void removeObject(GameObject o) {
+		new Thread(() -> {
+			lock.writeLock().lock();
+			try {
+				gameObjects.remove(o);
+				Platform.runLater(() -> {
+					Main.removeObject(o);
+				});
+			} finally {
+				lock.writeLock().unlock();
+			}
+		}).start();
 	}
 }         

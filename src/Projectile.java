@@ -5,6 +5,7 @@ public class Projectile extends GameObject {
 	Direction direction;
 
 	Projectile(Direction d, double x, double y) {
+		game = Main.getGame();
 		setX(x);
 		setY(y);
 		direction = d;
@@ -36,7 +37,7 @@ public class Projectile extends GameObject {
 		}
 		
 		if (offScreen())
-			Main.removeObject(this);
+			game.removeObject(this);
 		
 	}
 
