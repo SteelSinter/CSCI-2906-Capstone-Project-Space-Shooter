@@ -14,7 +14,7 @@ public class Player extends GameObject {
 	Player() {
 		super();
 		game = Main.getGame();
-		speedMultiplier = 1.5;
+		speedMultiplier = 2;
 		setImage(new Image("sprites/spr_player.png"));
 	}
 	

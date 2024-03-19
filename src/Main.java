@@ -41,7 +41,11 @@ public class Main extends Application {
 	
 	public static void addObject(GameObject o) {
 		background.getChildren().add(o);
-		
+	}
+	public static void addObject(GameObject o, double x, double y) {
+		background.getChildren().add(o);
+		o.setX(x);
+		o.setY(y);
 	}
 	
 	public static void removeObject(GameObject o) {
@@ -74,6 +78,10 @@ class Game extends Thread {
 		
 		// Setup key events
 		Main.scene.setOnKeyPressed(e -> {
+			//////
+			if (e.getCode() == KeyCode.DIGIT1)
+				new EnemyWave(3);
+			//////
 			try {
 				keys.put(e.getCode(), true);
 			}
@@ -136,6 +144,23 @@ class Game extends Thread {
 		
 		
 	}
+	
+	public void addObject(GameObject o, double x, double y) {
+		new Thread(() -> {
+			lock.writeLock().lock();
+			try {
+				gameObjects.add(o);
+				Platform.runLater(() -> {
+					Main.addObject(o, x, y);
+				});
+			} finally {
+				lock.writeLock().unlock();
+			}
+		}).start();
+		
+		
+	}
+	
 	public void removeObject(GameObject o) {
 		new Thread(() -> {
 			lock.writeLock().lock();
