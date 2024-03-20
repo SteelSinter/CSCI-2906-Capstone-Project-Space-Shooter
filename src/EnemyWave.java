@@ -6,21 +6,20 @@ public class EnemyWave {
 	private Formation formation;
 	private int count;
 	private double startX = Main.scene.getWidth();
-	private double startY = Main.scene.getHeight() / 2;
+	private double startY = Main.scene.getHeight() / 4;
 	
 	EnemyWave(int count, Formation formation, boolean mustKillAll, Enemy enemyType) {
 		this.count = count;
 		this.formation = formation;
 		this.mustKillAll = mustKillAll;
-		addEnemies();
 	}
 	
 	EnemyWave(int count) {
 		this.count = count;
-		addEnemies();
 	}
 	
-	private void addEnemies() {
+	public void startWave() {
+		System.out.println("Creating wave of " + count + " enemies");
 		double x = startX, y = startY;
 		for (int i = 0; i < count; i++) {
 			game.addObject(new RightToLeft(), x, y);

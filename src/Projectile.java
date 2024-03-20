@@ -1,5 +1,4 @@
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 
 public class Projectile extends GameObject {
 	Direction direction;

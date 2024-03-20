@@ -1,34 +1,27 @@
-import java.util.ConcurrentModificationException;
-
-import javafx.application.Platform;
-import javafx.scene.Parent;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 
 public class Player extends GameObject {
-	private double fireRate = 1;
+	private double fireRate = 1.5;
 	private double framesPassed = 0;
-	private Game game;
 	
 	Player() {
-		super();
-		game = Main.getGame();
 		speedMultiplier = 2;
 		setImage(new Image("sprites/spr_player.png"));
 	}
 	
 	public void update() {
+		checkCollisions();
 		if (game.keys.get(KeyCode.SPACE)) {
-			shoot();
 			framesPassed++;
-		} else {
-			framesPassed = 0;
 		}
+		if (!game.keys.get(KeyCode.SPACE))
+			framesPassed = 0;
 		
-		//if (framesPassed == 1 || framesPassed != 0 && framesPassed % 60 != 0) {
-		//	shoot();
-		//}
+		if (framesPassed == 1 || (framesPassed % (60 / fireRate)) == 0 && framesPassed != 0) {
+			System.out.println(framesPassed);
+			shoot();
+		}
 		
 		printStatus();
 	}
@@ -50,6 +43,19 @@ public class Player extends GameObject {
 	
 	public void shoot() {
 		game.addObject(new Projectile(Direction.RIGHT, getX() + getImage().getWidth(), getY() + getImage().getHeight() / 2));
+	}
+	
+	public void checkCollisions() {
+		try {
+			game.lock.readLock().lock();
+			for (GameObject o: game.gameObjects) {
+				///if () collision
+			}
+		} catch (NullPointerException ex) {
+			System.out.println("Null pointer exception ");
+		} finally {
+			game.lock.readLock().unlock();
+		}
 	}
 	
 	public void printStatus() {

@@ -2,9 +2,9 @@
 import javafx.scene.image.ImageView;
 
 abstract class GameObject extends ImageView {
-	double speedMultiplier;
 	enum Direction {UP, DOWN, LEFT, RIGHT}
-	Game game;
+	double speedMultiplier;
+	static Game game;
 	
 	GameObject() {
 		game = Main.getGame();

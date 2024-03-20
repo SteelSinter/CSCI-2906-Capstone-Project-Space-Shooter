@@ -1,10 +1,6 @@
-import java.io.File;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import javafx.application.Application;
@@ -65,7 +61,7 @@ public class Main extends Application {
 
 class Game extends Thread {
 	private final int FPS = 60;
-	private final ReadWriteLock lock = new ReentrantReadWriteLock();
+	final ReadWriteLock lock = new ReentrantReadWriteLock();
 	public HashMap<KeyCode, Boolean> keys = new HashMap<>();
 	public ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
 	@Override
@@ -75,13 +71,12 @@ class Game extends Thread {
 		keys.put(KeyCode.S, false);
 		keys.put(KeyCode.D, false);
 		keys.put(KeyCode.SPACE, false);
+		keys.put(KeyCode.DIGIT1, false);
 		
 		// Setup key events
 		Main.scene.setOnKeyPressed(e -> {
-			//////
 			if (e.getCode() == KeyCode.DIGIT1)
-				new EnemyWave(3);
-			//////
+				new EnemyWave(4).startWave();
 			try {
 				keys.put(e.getCode(), true);
 			}
@@ -116,13 +111,11 @@ class Game extends Thread {
 		try {
 			lock.readLock().lock();
 			for (GameObject o: gameObjects) {
-				if (o == null)
-					continue;
 				o.update();
 				o.draw();
 			}
 		} catch (NullPointerException ex) {
-			System.out.println("Null pointer exception");
+			System.out.println("Null pointer exception ");
 		} finally {
 			lock.readLock().unlock();
 		}
