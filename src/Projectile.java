@@ -4,39 +4,33 @@ public class Projectile extends GameObject {
 	Direction direction;
 
 	Projectile(Direction d, double x, double y) {
+		super(new Image("sprites/spr_bullet.png"));
 		setX(x);
 		setY(y);
 		direction = d;
-		setImage(new Image("sprites/spr_bullet.png"));
-		speedMultiplier = 5;
+		speed = 5;
+		setHitboxVisible(true);
 	}
 	
 	@Override
 	void update() {
-		
-		
-	}
-
-	@Override
-	void draw() {
 		switch (direction) {
 		case UP:
-			setY(getY() - 1 * speedMultiplier);
+			setY(getY() - 1 * speed);
 			break;
 		case DOWN:
-			setY(getY() + 1 * speedMultiplier);
+			setY(getY() + 1 * speed);
 			break;
 		case LEFT:
-			setX(getX() - 1 * speedMultiplier);
+			setX(getX() - 1 * speed);
 			break;
 		case RIGHT:
-			setX(getX() + 1 * speedMultiplier);
+			setX(getX() + 1 * speed);
 			break;
 		}
 		
-		if (offScreen())
+		if (isOffScreen())
 			game.removeObject(this);
-		
 	}
 
 }

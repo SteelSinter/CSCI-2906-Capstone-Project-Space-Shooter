@@ -3,7 +3,11 @@ import javafx.scene.image.Image;
 abstract class Enemy extends GameObject {
 	protected enum EnemyType {RIGHTTOLEFT, SPINNER, TRACKER}
 	Direction direction;
-	Enemy() {
+	
+	Enemy() {}
+	
+	Enemy(Image sprite) {
+		super(sprite);
 	}
 	
 	static void createEnemy(EnemyType type) {
@@ -19,21 +23,16 @@ abstract class Enemy extends GameObject {
 class RightToLeft extends Enemy {
 	
 	RightToLeft() {
-		setImage(new Image("sprites/spr_enemy.png"));
-		System.out.println("RighttoLeftAdded");
-		speedMultiplier = 2;
+		super(new Image("sprites/spr_enemy.png"));
+		speed = 2;
 	}
 
 	@Override
 	void update() {
-		if (offScreen() && getX() < -50)
+		if (isOffScreen() && getX() < Main.scene.getHeight());
 			game.removeObject(this);
+		setX(getX() - 1 * speed);
 		
-	}
-
-	@Override
-	void draw() {
-		setX(getX() - 1 * speedMultiplier);
 	}
 	
 }

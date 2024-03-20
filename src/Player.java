@@ -9,17 +9,18 @@ public class Player extends GameObject {
 	private double framesPassed = 0;
 	
 	Player() {
-		speedMultiplier = 2;
-		setImage(new Image("sprites/spr_player.png"));
-		hitbox = new Rectangle(getImage().getWidth(), getImage().getHeight());
-		hitbox.setStroke(Color.RED);
+		super(new Image("sprites/spr_player.png"));
+		speed = 2;
+		setHitboxVisible(true);
 	}
 	
 	public void update() {
 		checkCollisions();
+		
 		if (game.keys.get(KeyCode.SPACE)) {
 			framesPassed++;
 		}
+		
 		if (!game.keys.get(KeyCode.SPACE))
 			framesPassed = 0;
 		
@@ -28,29 +29,24 @@ public class Player extends GameObject {
 			shoot();
 		}
 		
-		hitbox.setX(this.getX());
-		hitbox.setY(this.getY());
+		if (game.keys.get(KeyCode.W)) {
+			setY(getY() - 1 * speed);
+		}
+		if (game.keys.get(KeyCode.A)) {
+			setX(getX() - 1 * speed);
+		}
+		if (game.keys.get(KeyCode.S)) {
+			setY(getY() + 1 * speed);
+		}
+		if (game.keys.get(KeyCode.D)) {
+			setX(getX() + 1 * speed);
+		}
 		
 		printStatus();
 	}
 	
-	public void draw() {
-		if (game.keys.get(KeyCode.W)) {
-			setY(getY() - 1 * speedMultiplier);
-		}
-		if (game.keys.get(KeyCode.A)) {
-			setX(getX() - 1 * speedMultiplier);
-		}
-		if (game.keys.get(KeyCode.S)) {
-			setY(getY() + 1 * speedMultiplier);
-		}
-		if (game.keys.get(KeyCode.D)) {
-			setX(getX() + 1 * speedMultiplier);
-		}
-	}
-	
 	public void shoot() {
-		game.addObject(new Projectile(Direction.RIGHT, getX() + getImage().getWidth(), getY() + getImage().getHeight() / 2));
+		game.addObject(new Projectile(Direction.RIGHT, getX() + getWidth(), getY() + (getHeight() / 2)));
 	}
 	
 	public void checkCollisions() {
@@ -58,6 +54,7 @@ public class Player extends GameObject {
 			game.lock.readLock().lock();
 			for (GameObject o: game.gameObjects) {
 				// check for intersect
+				// TODO: new list to check so it only checks against enemies and enemy projectiles.
 			}
 		} catch (NullPointerException ex) {
 			System.out.println("Null pointer exception ");
@@ -69,6 +66,6 @@ public class Player extends GameObject {
 	public void printStatus() {
 		System.out.println(getX());
 		System.out.println(getY());
-		System.out.println(offScreen());
+		System.out.println("Off screen: " + isOffScreen());
 	}
 }

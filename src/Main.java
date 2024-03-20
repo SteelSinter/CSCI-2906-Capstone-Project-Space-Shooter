@@ -24,7 +24,7 @@ public class Main extends Application {
 	public void start(Stage mainStage) {
 		background = new Pane();
 		scene = new Scene(background, 700, 500);
-		scene.setFill(new ImagePattern(new Image("sprites/Space.jpg")));
+		scene.setFill(new ImagePattern(new Image("sprites/spr_background.png"), 0, 0, 64, 64, false));
 		
 		mainStage.setScene(scene);
 		mainStage.setTitle("Space Shooter");
@@ -112,7 +112,6 @@ class Game extends Thread {
 			lock.readLock().lock();
 			for (GameObject o: gameObjects) {
 				o.update();
-				o.draw();
 			}
 		} catch (NullPointerException ex) {
 			System.out.println("Null pointer exception ");
