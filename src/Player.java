@@ -1,5 +1,8 @@
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 public class Player extends GameObject {
 	private double fireRate = 1.5;
@@ -8,6 +11,8 @@ public class Player extends GameObject {
 	Player() {
 		speedMultiplier = 2;
 		setImage(new Image("sprites/spr_player.png"));
+		hitbox = new Rectangle(getImage().getWidth(), getImage().getHeight());
+		hitbox.setStroke(Color.RED);
 	}
 	
 	public void update() {
@@ -22,6 +27,9 @@ public class Player extends GameObject {
 			System.out.println(framesPassed);
 			shoot();
 		}
+		
+		hitbox.setX(this.getX());
+		hitbox.setY(this.getY());
 		
 		printStatus();
 	}
@@ -49,7 +57,7 @@ public class Player extends GameObject {
 		try {
 			game.lock.readLock().lock();
 			for (GameObject o: game.gameObjects) {
-				///if () collision
+				// check for intersect
 			}
 		} catch (NullPointerException ex) {
 			System.out.println("Null pointer exception ");

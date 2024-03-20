@@ -167,4 +167,8 @@ class Game extends Thread {
 			}
 		}).start();
 	}
-}         
+}
+
+class SpriteRenderer {
+	
+}
