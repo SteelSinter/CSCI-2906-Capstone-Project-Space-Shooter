@@ -17,6 +17,22 @@ abstract class Enemy extends GameObject {
 			
 		}
 	}
+	
+	public void checkCollisions() {
+		try {
+			game.lock.readLock().lock();
+			for (GameObject o: game.playerProjectiles) {
+				if (colliding(o)) {
+					this.destroy();
+					o.destroy();
+				}
+			}
+		} catch (NullPointerException ex) {
+			System.out.println("Null pointer exception ");
+		} finally {
+			game.lock.readLock().unlock();
+		}
+	}
 
 }
 
@@ -31,6 +47,7 @@ class RightToLeft extends Enemy {
 
 	@Override
 	void update() {
+		checkCollisions();
 		if (getX() < -50)
 			game.removeObject(this);
 		setX(getX() - 1 * speed);

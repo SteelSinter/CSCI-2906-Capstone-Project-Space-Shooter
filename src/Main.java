@@ -65,6 +65,7 @@ class Game extends Thread {
 	public HashMap<KeyCode, Boolean> keys = new HashMap<>();
 	public ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
 	public ArrayList<GameObject> enemyObjects = new ArrayList<GameObject>();
+	public ArrayList<GameObject> playerProjectiles = new ArrayList<GameObject>();
 	
 	@Override
 	public void run() {
@@ -113,7 +114,9 @@ class Game extends Thread {
 		try {
 			lock.readLock().lock();
 			for (GameObject o: gameObjects) {
+				// Remove dead objects
 				if (o.isDead()) {
+					removeObject(o);
 					continue;
 				}
 				o.update();
@@ -134,6 +137,9 @@ class Game extends Thread {
 				if (o.isEnemy()) {
 					enemyObjects.add(o);
 				}
+				if (o instanceof Projectile && !o.isEnemy()) {
+					playerProjectiles.add(o);
+				}
 				Platform.runLater(() -> {
 					Main.addObject(o);
 				});
@@ -153,6 +159,9 @@ class Game extends Thread {
 				if (o.isEnemy()) {
 					enemyObjects.add(o);
 				}
+				if (o instanceof Projectile && !o.isEnemy()) {
+					playerProjectiles.add(o);
+				}
 				Platform.runLater(() -> {
 					Main.addObject(o, x, y);
 				});
@@ -171,7 +180,10 @@ class Game extends Thread {
 				gameObjects.remove(o);
 				if (o.isEnemy()) {
 					enemyObjects.remove(o);
-				}	
+				}
+				if (o instanceof Projectile && !o.isEnemy()) {
+					playerProjectiles.remove(o);
+				}
 				Platform.runLater(() -> {
 					Main.removeObject(o);
 				});
