@@ -32,5 +32,10 @@ public class Projectile extends GameObject {
 		if (isOffScreen())
 			game.removeObject(this);
 	}
+	
+	@Override
+	public void destroy() {
+		isDead = true;
+	}
 
 }

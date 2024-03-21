@@ -64,6 +64,8 @@ class Game extends Thread {
 	final ReadWriteLock lock = new ReentrantReadWriteLock();
 	public HashMap<KeyCode, Boolean> keys = new HashMap<>();
 	public ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
+	public ArrayList<GameObject> enemyObjects = new ArrayList<GameObject>();
+	
 	@Override
 	public void run() {
 		keys.put(KeyCode.W, false);
@@ -111,6 +113,9 @@ class Game extends Thread {
 		try {
 			lock.readLock().lock();
 			for (GameObject o: gameObjects) {
+				if (o.isDead()) {
+					continue;
+				}
 				o.update();
 			}
 		} catch (NullPointerException ex) {
@@ -126,6 +131,9 @@ class Game extends Thread {
 			lock.writeLock().lock();
 			try {
 				gameObjects.add(o);
+				if (o.isEnemy()) {
+					enemyObjects.add(o);
+				}
 				Platform.runLater(() -> {
 					Main.addObject(o);
 				});
@@ -142,6 +150,9 @@ class Game extends Thread {
 			lock.writeLock().lock();
 			try {
 				gameObjects.add(o);
+				if (o.isEnemy()) {
+					enemyObjects.add(o);
+				}
 				Platform.runLater(() -> {
 					Main.addObject(o, x, y);
 				});
@@ -158,6 +169,9 @@ class Game extends Thread {
 			lock.writeLock().lock();
 			try {
 				gameObjects.remove(o);
+				if (o.isEnemy()) {
+					enemyObjects.remove(o);
+				}	
 				Platform.runLater(() -> {
 					Main.removeObject(o);
 				});

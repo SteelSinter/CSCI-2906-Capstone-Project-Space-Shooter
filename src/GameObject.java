@@ -1,4 +1,6 @@
-
+/**
+ * @author James Jesus
+ */
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -6,7 +8,7 @@ import javafx.scene.shape.Rectangle;
 abstract class GameObject extends Rectangle {
 	enum Direction {UP, DOWN, LEFT, RIGHT}
 	protected static Game game;
-	protected boolean isDead, isHitboxVisible;
+	protected boolean isDead, isHitboxVisible, isEnemy;
 	Image sprite;
 	double speed;
 	
@@ -26,8 +28,22 @@ abstract class GameObject extends Rectangle {
 		setWidth(sprite.getWidth());
 		setHeight(sprite.getHeight());
 	}
+	/**
+	 * Check if this object is colliding with another object.
+	 * @param other other object
+	 * @return true if they are colliding
+	 */
+	public boolean colliding(GameObject other) {
+		if (this.getBoundsInParent().intersects(other.getBoundsInParent())) {
+			return true;
+		}
+		
+		return false;
+	}
 	
 	abstract void update();
+	
+	abstract void destroy();
 	
 	public boolean isOffScreen() {
 		return (getX() < 0 - sprite.getWidth() ||
@@ -55,6 +71,10 @@ abstract class GameObject extends Rectangle {
 	
 	public boolean isDead() {
 		return isDead;
+	}
+	
+	public boolean isEnemy() {
+		return isEnemy;
 	}
 	
 	public boolean isHitboxVisible() {

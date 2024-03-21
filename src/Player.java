@@ -42,7 +42,12 @@ public class Player extends GameObject {
 			setX(getX() + 1 * speed);
 		}
 		
-		printStatus();
+		//printStatus();
+	}
+	
+	@Override
+	public void destroy() {
+		isDead = true;
 	}
 	
 	public void shoot() {
@@ -52,9 +57,11 @@ public class Player extends GameObject {
 	public void checkCollisions() {
 		try {
 			game.lock.readLock().lock();
-			for (GameObject o: game.gameObjects) {
-				// check for intersect
-				// TODO: new list to check so it only checks against enemies and enemy projectiles.
+			for (GameObject o: game.enemyObjects) {
+				if (colliding(o)) {
+					this.destroy();
+					o.destroy();
+				}
 			}
 		} catch (NullPointerException ex) {
 			System.out.println("Null pointer exception ");
