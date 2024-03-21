@@ -8,7 +8,7 @@ import javafx.scene.shape.Rectangle;
 abstract class GameObject extends Rectangle {
 	enum Direction {UP, DOWN, LEFT, RIGHT}
 	protected static Game game;
-	protected boolean isDead, isHitboxVisible, isEnemy;
+	protected boolean isDead, hitboxVisible, isEnemy;
 	Image sprite;
 	double speed;
 	
@@ -16,6 +16,7 @@ abstract class GameObject extends Rectangle {
 		game = Main.getGame();
 		speed = 1;
 		setFill(Color.TRANSPARENT);
+		setStroke(Color.RED);
 		setWidth(50);
 		setHeight(50);
 	}
@@ -25,6 +26,7 @@ abstract class GameObject extends Rectangle {
 		this.sprite = sprite;
 		speed = 1;
 		setFill(Color.TRANSPARENT);
+		setStroke(Color.RED);
 		setWidth(sprite.getWidth());
 		setHeight(sprite.getHeight());
 	}
@@ -53,19 +55,14 @@ abstract class GameObject extends Rectangle {
 	}
 	
 	public void toggleHitbox() {
-		isHitboxVisible = !isHitboxVisible();
-		if (isHitboxVisible) {
-			setStroke(Color.RED);
-		} else {
-			setStroke(Color.TRANSPARENT);
-		}
+		hitboxVisible = !hitboxVisible();
 	}
 	
 	public void setHitboxVisible(boolean b) {
 		if (b) {
-			setStroke(Color.RED);
+			hitboxVisible = true;
 		} else {
-			setStroke(Color.TRANSPARENT);
+			hitboxVisible = false;
 		}
 	}
 	
@@ -77,8 +74,8 @@ abstract class GameObject extends Rectangle {
 		return isEnemy;
 	}
 	
-	public boolean isHitboxVisible() {
-		return isHitboxVisible;
+	public boolean hitboxVisible() {
+		return hitboxVisible;
 	}
 	
 	public Image getSprite() {

@@ -25,7 +25,6 @@ public class Player extends GameObject {
 			framesPassed = 0;
 		
 		if (framesPassed == 1 || (framesPassed % (60 / fireRate)) == 0 && framesPassed != 0) {
-			System.out.println(framesPassed);
 			shoot();
 		}
 		
@@ -48,6 +47,7 @@ public class Player extends GameObject {
 	@Override
 	public void destroy() {
 		isDead = true;
+		System.out.println("Player hit");
 	}
 	
 	public void shoot() {

@@ -5,8 +5,10 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -22,6 +24,9 @@ public class Main extends Application {
 	public static Scene scene;
 	public static boolean gamePaused = false;
 	public static Game game;
+	public static Label pointCounter;
+	public static Label lifeCounter;
+	public static ArrayList<Label> guis = new ArrayList<Label>();
 	
 
 	@Override
@@ -29,6 +34,8 @@ public class Main extends Application {
 		background = new Pane();
 		scene = new Scene(background, 700, 500);
 		scene.setFill(new ImagePattern(new Image("sprites/spr_background.png"), 0, 0, 64, 64, false));
+		guis.add(pointCounter);
+		guis.add(lifeCounter);
 		
 		mainStage.setScene(scene);
 		mainStage.setTitle("Space Shooter");
@@ -41,6 +48,10 @@ public class Main extends Application {
 	
 	public static void addObject(ImageView i) {
 		background.getChildren().add(i);
+	}
+	
+	public static void addObject(Label l) {
+		background.getChildren().add(l);
 	}
 	
 	public static void addObject(Rectangle r) {
@@ -155,6 +166,14 @@ class Game extends Thread {
 			Main.background.getChildren().clear();
 			for (GameObject o: gameObjects) {
 				Main.addObject(new ImageView(o.getSprite()), o.getX(), o.getY());
+				// If the hitbox is visible, add it to the scene
+				if (o.hitboxVisible()) {
+					Main.addObject((Rectangle) o, o.getX(), o.getY());
+				}
+				// Draw guis
+				for (Label l: Main.guis) {
+					Main.addObject(l);
+				}
 			}
 		} catch (NullPointerException ex) {
 			System.out.println("Null pointer exception ");
