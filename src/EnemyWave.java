@@ -26,8 +26,9 @@ public class EnemyWave {
 			if (i % 5 == 0 && i != 0) {
 				x += 50;
 				y = startY;
+			} else {
+				y += 50;
 			}
-			y += 50;
 			
 		}
 	}

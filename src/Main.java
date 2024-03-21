@@ -26,7 +26,6 @@ public class Main extends Application {
 	public static Pane background;
 	public static Pane pane;
 	public static Scene scene;
-	public static boolean gamePaused = false;
 	public static Game game;
 	public static Text pointCounter;
 	public static Text lifeCounter;
@@ -95,6 +94,9 @@ public class Main extends Application {
 
 class Game extends Thread {
 	private final int FPS = 60;
+	private long startTime, endTime, duration;
+	public static boolean gameRunning = true;
+	public static boolean gamePaused = false;
 	final ReadWriteLock lock = new ReentrantReadWriteLock();
 	public HashMap<KeyCode, Boolean> keys = new HashMap<>();
 	public ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
@@ -118,8 +120,10 @@ class Game extends Thread {
 		
 		// Setup key events
 		Main.scene.setOnKeyPressed(e -> {
-			if (e.getCode() == KeyCode.DIGIT1)
-				new EnemyWave(25).startWave();
+			if (e.getCode() == KeyCode.P) {
+				gamePaused = !gamePaused;
+				System.out.println("game pause");
+			}
 			try {
 				keys.put(e.getCode(), true);
 			}
@@ -140,16 +144,26 @@ class Game extends Thread {
 		addObject(new Player());
 		System.out.println("Player added to scene.");
 		System.out.println("Game loop started");
-		while (!Main.gamePaused) {
-			updateGame();
-			Platform.runLater(() -> {
-				drawSprites();
-			});
-			
-			try {
-				Thread.sleep(1000 / FPS);
-			} catch (InterruptedException ex) {
-				ex.printStackTrace();
+		while (gameRunning) {
+			if (!gamePaused) {
+				System.out.println("game not paused");
+				try {
+					startTime = System.currentTimeMillis();
+					updateGame();
+					Platform.runLater(() -> {
+						drawSprites();
+					});
+					endTime = System.currentTimeMillis();
+					duration = endTime - startTime;
+					Thread.sleep((1000 - duration) / FPS);
+				} catch (InterruptedException ex) {
+					ex.printStackTrace();
+				} catch (Exception ex) {
+					System.out.println("Exception in game loop");
+					ex.printStackTrace();
+				}
+			} else {
+				System.out.println("game paused");
 			}
 		}
 	}
@@ -188,6 +202,9 @@ class Game extends Thread {
 			}
 		} catch (NullPointerException ex) {
 			System.out.println("Null pointer exception ");
+		} catch (Exception ex) {
+			System.out.println("Exception in drawSprites()");
+			ex.printStackTrace();
 		} finally {
 			lock.readLock().unlock();
 		}
