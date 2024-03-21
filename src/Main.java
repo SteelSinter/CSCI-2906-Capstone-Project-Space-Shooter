@@ -13,29 +13,37 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 	public Player player;
 	public static Pane background;
+	public static Pane pane;
 	public static Scene scene;
 	public static boolean gamePaused = false;
 	public static Game game;
-	public static Label pointCounter;
-	public static Label lifeCounter;
-	public static ArrayList<Label> guis = new ArrayList<Label>();
+	public static Text pointCounter;
+	public static Text lifeCounter;
 	
 
 	@Override
 	public void start(Stage mainStage) {
+		pointCounter = new Text("0");
+		lifeCounter = new Text("3");
 		background = new Pane();
-		scene = new Scene(background, 700, 500);
+		pane = new Pane();
+		pane.getChildren().addAll(background, pointCounter, lifeCounter);
+		scene = new Scene(pane, 700, 500);
 		scene.setFill(new ImagePattern(new Image("sprites/spr_background.png"), 0, 0, 64, 64, false));
-		guis.add(pointCounter);
-		guis.add(lifeCounter);
+		lifeCounter.setStroke(Color.WHITE);
+		lifeCounter.setX(scene.getWidth() - (scene.getWidth() / 3));
+		lifeCounter.setFont(new Font("", 23));
 		
 		mainStage.setScene(scene);
 		mainStage.setTitle("Space Shooter");
@@ -92,6 +100,12 @@ class Game extends Thread {
 	public ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
 	public ArrayList<GameObject> enemyObjects = new ArrayList<GameObject>();
 	public ArrayList<GameObject> playerProjectiles = new ArrayList<GameObject>();
+	public EnemyWave[] level1 = {
+			new EnemyWave(4),
+			new EnemyWave(6),
+			new EnemyWave(6),
+			new EnemyWave(25),
+	};
 	
 	@Override
 	public void run() {
@@ -105,7 +119,7 @@ class Game extends Thread {
 		// Setup key events
 		Main.scene.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.DIGIT1)
-				new EnemyWave(4).startWave();
+				new EnemyWave(25).startWave();
 			try {
 				keys.put(e.getCode(), true);
 			}
@@ -164,15 +178,12 @@ class Game extends Thread {
 			lock.readLock().lock();
 			// Clear sprites
 			Main.background.getChildren().clear();
+			
 			for (GameObject o: gameObjects) {
-				Main.addObject(new ImageView(o.getSprite()), o.getX(), o.getY());
+				Main.addObject(new ImageView(o.getSprite()), o.getX() + o.getXOffset(), o.getY() + o.getYOffset());
 				// If the hitbox is visible, add it to the scene
 				if (o.hitboxVisible()) {
 					Main.addObject((Rectangle) o, o.getX(), o.getY());
-				}
-				// Draw guis
-				for (Label l: Main.guis) {
-					Main.addObject(l);
 				}
 			}
 		} catch (NullPointerException ex) {

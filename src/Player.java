@@ -12,6 +12,8 @@ public class Player extends GameObject {
 		super(new Image("sprites/spr_player.png"));
 		speed = 2;
 		setHitboxVisible(true);
+		setHeight(sprite.getHeight() / 3);
+		setYOffset(-(sprite.getHeight() / 3));
 	}
 	
 	public void update() {

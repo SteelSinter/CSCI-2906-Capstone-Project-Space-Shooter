@@ -10,7 +10,7 @@ abstract class GameObject extends Rectangle {
 	protected static Game game;
 	protected boolean isDead, hitboxVisible, isEnemy;
 	Image sprite;
-	double speed;
+	double speed, xOffset = 0, yOffset = 0;
 	
 	GameObject() {
 		game = Main.getGame();
@@ -30,6 +30,17 @@ abstract class GameObject extends Rectangle {
 		setWidth(sprite.getWidth());
 		setHeight(sprite.getHeight());
 	}
+	
+	abstract void update();
+	
+	abstract void destroy();
+	
+	public boolean isOffScreen() {
+		return (getX() < 0 - sprite.getWidth() ||
+				getX() > Main.scene.getWidth() ||
+				getY() < 0 - sprite.getHeight() ||
+				getY() > Main.scene.getHeight());
+	}
 	/**
 	 * Check if this object is colliding with another object.
 	 * @param other other object
@@ -43,19 +54,8 @@ abstract class GameObject extends Rectangle {
 		return false;
 	}
 	
-	abstract void update();
-	
-	abstract void destroy();
-	
-	public boolean isOffScreen() {
-		return (getX() < 0 - sprite.getWidth() ||
-				getX() > Main.scene.getWidth() ||
-				getY() < 0 - sprite.getHeight() ||
-				getY() > Main.scene.getHeight());
-	}
-	
 	public void toggleHitbox() {
-		hitboxVisible = !hitboxVisible();
+		hitboxVisible = !hitboxVisible;
 	}
 	
 	public void setHitboxVisible(boolean b) {
@@ -64,6 +64,22 @@ abstract class GameObject extends Rectangle {
 		} else {
 			hitboxVisible = false;
 		}
+	}
+	
+	public void setXOffset(double d) {
+		this.xOffset = d;
+	}
+	
+	public void setYOffset(double d) {
+		this.yOffset = d;
+	}
+	
+	public double getXOffset() {
+		return xOffset;
+	}
+	
+	public double getYOffset() {
+		return yOffset;
 	}
 	
 	public boolean isDead() {

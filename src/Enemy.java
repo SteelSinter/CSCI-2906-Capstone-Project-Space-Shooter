@@ -42,6 +42,8 @@ class RightToLeft extends Enemy {
 		super(new Image("sprites/spr_enemy.png"));
 		isEnemy = true;
 		setHitboxVisible(true);
+		setHeight(sprite.getHeight() / 3);
+		setYOffset(-(sprite.getHeight() / 3));
 		speed = 2;
 	}
 
