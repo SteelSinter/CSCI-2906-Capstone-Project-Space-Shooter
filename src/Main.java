@@ -5,11 +5,15 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -35,17 +39,28 @@ public class Main extends Application {
 		game.start(); // start game thread
 	}
 	
-	public static void addObject(GameObject o) {
-		background.getChildren().add(o);
-	}
-	public static void addObject(GameObject o, double x, double y) {
-		background.getChildren().add(o);
-		o.setX(x);
-		o.setY(y);
+	public static void addObject(ImageView i) {
+		background.getChildren().add(i);
 	}
 	
-	public static void removeObject(GameObject o) {
-		background.getChildren().remove(o);
+	public static void addObject(Rectangle r) {
+		background.getChildren().add(r);
+	}
+	
+	public static void addObject(ImageView i, double x, double y) {
+		background.getChildren().add(i);
+		i.setX(x);
+		i.setY(y);
+	}
+	
+	public static void addObject(Rectangle r, double x, double y) {
+		background.getChildren().add(r);
+		r.setX(x);
+		r.setY(y);
+	}
+	
+	public static void removeObject(Node n) {
+		background.getChildren().remove(n);
 	}
 	
 	public static Game getGame() {
@@ -102,6 +117,10 @@ class Game extends Thread {
 		System.out.println("Game loop started");
 		while (!Main.gamePaused) {
 			updateGame();
+			Platform.runLater(() -> {
+				drawSprites();
+			});
+			
 			try {
 				Thread.sleep(1000 / FPS);
 			} catch (InterruptedException ex) {
@@ -129,6 +148,21 @@ class Game extends Thread {
 		
 	}
 	
+	public void drawSprites() {
+		try {
+			lock.readLock().lock();
+			// Clear sprites
+			Main.background.getChildren().clear();
+			for (GameObject o: gameObjects) {
+				Main.addObject(new ImageView(o.getSprite()), o.getX(), o.getY());
+			}
+		} catch (NullPointerException ex) {
+			System.out.println("Null pointer exception ");
+		} finally {
+			lock.readLock().unlock();
+		}
+	}
+	
 	public void addObject(GameObject o) {
 		new Thread(() -> {
 			lock.writeLock().lock();
@@ -140,9 +174,6 @@ class Game extends Thread {
 				if (o instanceof Projectile && !o.isEnemy()) {
 					playerProjectiles.add(o);
 				}
-				Platform.runLater(() -> {
-					Main.addObject(o);
-				});
 			} finally {
 				lock.writeLock().unlock();
 			}
@@ -162,9 +193,8 @@ class Game extends Thread {
 				if (o instanceof Projectile && !o.isEnemy()) {
 					playerProjectiles.add(o);
 				}
-				Platform.runLater(() -> {
-					Main.addObject(o, x, y);
-				});
+				o.setX(x);
+				o.setY(y);
 			} finally {
 				lock.writeLock().unlock();
 			}
@@ -184,9 +214,6 @@ class Game extends Thread {
 				if (o instanceof Projectile && !o.isEnemy()) {
 					playerProjectiles.remove(o);
 				}
-				Platform.runLater(() -> {
-					Main.removeObject(o);
-				});
 			} finally {
 				lock.writeLock().unlock();
 			}
