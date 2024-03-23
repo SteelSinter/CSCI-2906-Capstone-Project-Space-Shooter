@@ -1,0 +1,13 @@
+.button {
+	-fx-text-fill: white;
+	-fx-border-radius: 0;
+	-fx-background-radius: 0;
+}
+
+#black-space {
+	-fx-background-color: black;
+}
+
+#white-space {
+	-fx-background-color: white;
+}
