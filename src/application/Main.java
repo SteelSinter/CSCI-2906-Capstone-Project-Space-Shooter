@@ -109,6 +109,8 @@ class Game extends Thread {
 			new EnemyWave(25),
 	};
 	
+	public GameOrder gameOrder = new GameOrder();
+	
 	@Override
 	public void run() {
 		keys.put(KeyCode.W, false);
@@ -148,6 +150,7 @@ class Game extends Thread {
 			if (!gamePaused) {
 				try {
 					startTime = System.currentTimeMillis();
+					gameOrder.next();
 					updateGame();
 					Platform.runLater(() -> {
 						drawSprites();
@@ -268,18 +271,35 @@ class Game extends Thread {
 }
 
 class GameOrder {
-	private static final LinkedList<Object> gameOrder = new LinkedList<Object>();
+	private LinkedList<Object> gameOrder = new LinkedList<Object>();
+	private int frameInterval;
 	Game game = Main.getGame();
 	
+	GameOrder() {
+		gameOrder.add(new EnemyWave(6));
+		gameOrder.add(new EnemyWave(8));
+		gameOrder.add(new EnemyWave(9));
+		gameOrder.add(new EnemyWave(12));
+		//gameOrder.add(new Powerup());
+		frameInterval = 0;
+	}
+	
 	protected void next() {
+		frameInterval++;
+		if (!(frameInterval % 400 == 0)) {
+			return;
+		}
+		if (gameOrder.isEmpty()) {
+			return;
+		}
 		Object next = gameOrder.pop();
 		if (next instanceof Powerup) {
 			game.addObject((Powerup) next);
 			return;
 		}
-		
 		if (next instanceof EnemyWave) {
 			((EnemyWave) next).startWave();
+			return;
 		}
 	}
 }

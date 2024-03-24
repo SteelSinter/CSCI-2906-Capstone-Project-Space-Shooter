@@ -13,7 +13,7 @@ public class Powerup extends GameObject {
 	
 	@Override
 	void update() {
-		// TODO Auto-generated method stub
+		setX(getX() - 1 * speed);
 
 	}
 

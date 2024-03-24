@@ -2,7 +2,7 @@ package application;
 import javafx.scene.image.Image;
 
 abstract class Enemy extends GameObject {
-	protected enum EnemyType {RIGHTTOLEFT, SPINNER, TRACKER}
+	protected enum EnemyType {RIGHTTOLEFT, SPINNER, TRACKER, STAY}
 	Direction direction;
 	
 	Enemy() {}
@@ -62,4 +62,24 @@ class RightToLeft extends Enemy {
 		isDead = true;
 	}
 	
+}
+
+class Stay extends Enemy {
+	private boolean stopped = false;
+	
+	Stay() {
+		super(new Image("sprites/spr_stay"));
+	}
+
+	@Override
+	void update() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	void destroy() {
+		// TODO Auto-generated method stub
+		
+	}
 }
