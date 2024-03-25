@@ -8,7 +8,7 @@ public class Projectile extends GameObject {
 
 	Projectile(Direction d, double x, double y) {
 		super(new Image("sprites/spr_bullet.png"));
-		this.sprite = Main.resizeImage(getSprite(), (int) Main.SCREEN_WIDTH / 50, (int) Main.SCREEN_WIDTH / 100);
+		this.sprite = Main.resizeImage(getSprite(), (int) Main.SCREEN_WIDTH / 50, (int) Main.SCREEN_WIDTH / 120);
 		setX(x);
 		setY(y);
 		direction = d;

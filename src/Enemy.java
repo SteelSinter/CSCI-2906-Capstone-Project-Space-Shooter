@@ -75,7 +75,7 @@ class Stay extends Enemy {
 	private boolean stopped = false;
 	
 	Stay() {
-		super(new Image("sprites/spr_stay"));
+		super(new Image("sprites/spr_stay.png"));
 	}
 
 	@Override

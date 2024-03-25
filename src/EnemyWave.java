@@ -49,7 +49,7 @@ public class EnemyWave {
 				x += Main.SCREEN_WIDTH / 10;
 				y = startY;
 			} else {
-				y += Main.SCREEN_HEIGHT / 10;
+				y += Main.SCREEN_HEIGHT / 8;
 			}
 			
 		}

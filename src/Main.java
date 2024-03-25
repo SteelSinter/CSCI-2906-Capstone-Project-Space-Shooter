@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import java.awt.Toolkit;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -312,6 +313,7 @@ class GameOrder {
 	Game game = Main.getGame();
 	
 	GameOrder() {
+		gameOrder.add(new EnemyWave(5, Enemy.EnemyType.STAY, EnemyWave.Formation.SQUARE));
 		gameOrder.add(new EnemyWave(6));
 		gameOrder.add(new EnemyWave(8));
 		gameOrder.add(new EnemyWave(9));
@@ -325,7 +327,7 @@ class GameOrder {
 	}
 	
 	protected void next() throws IOException {
-		System.out.println(frameInterval);
+		//System.out.println(frameInterval);
 		frameInterval++;
 		if (!(frameInterval % 300 == 0)) {
 			return;
