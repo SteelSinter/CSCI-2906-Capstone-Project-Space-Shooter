@@ -185,6 +185,9 @@ class Game extends Thread {
 					startTime = System.currentTimeMillis();
 					gameOrder.next();
 					updateGame();
+					if (enemyObjects.isEmpty()) {
+						gameOrder.nextWave();
+					}
 					Platform.runLater(() -> {
 						drawSprites();
 					});
@@ -317,7 +320,12 @@ class GameOrder {
 		frameInterval = 0;
 	}
 	
+	protected void nextWave() {
+		frameInterval = 299;
+	}
+	
 	protected void next() throws IOException {
+		System.out.println(frameInterval);
 		frameInterval++;
 		if (!(frameInterval % 300 == 0)) {
 			return;

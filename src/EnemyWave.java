@@ -1,5 +1,4 @@
 import java.io.IOException;
-import Enemy.EnemyType;
 
 public class EnemyWave {
 	public enum Formation {SQUARE, SINE, TRIANGLE}
@@ -7,12 +6,12 @@ public class EnemyWave {
 	private double startY = Main.scene.getHeight() / 4;
 	private boolean mustKillAll; // If the player needs to kill all of them to progress
 	private Formation formation;
-	private EnemyType type;
+	private Enemy.EnemyType type;
 	private static Game game;
 	private int count;
 	
 	
-	EnemyWave(int count, EnemyType type, Formation formation) {
+	EnemyWave(int count, Enemy.EnemyType type, Formation formation) {
 		game = Main.getGame();
 		this.count = count;
 		this.formation = formation;
@@ -23,7 +22,7 @@ public class EnemyWave {
 		game = Main.getGame();
 		this.count = count;
 		formation = Formation.SQUARE;
-		type = EnemyType.RIGHTTOLEFT;
+		type = Enemy.EnemyType.RIGHTTOLEFT;
 	}
 	
 	public void startWave() throws IOException {
@@ -45,19 +44,7 @@ public class EnemyWave {
 		System.out.println("Creating square wave of " + count + " enemies");
 		double x = startX, y = startY;
 		for (int i = 0; i < count; i++) {
-			switch (type) {
-			case RIGHTTOLEFT:
-				game.addObject(new RightToLeft(), x, y);
-				break;
-			case STAY:
-				game.addObject(new Stay(), x, y);
-			case SPIN:
-				//
-				break;
-			default:
-				game.addObject(new RightToLeft(), x, y);
-				break;
-			}
+			Enemy.createEnemy(type, x, y);
 			if (i % 6 == 0 && i != 0) {
 				x += Main.SCREEN_WIDTH / 10;
 				y = startY;

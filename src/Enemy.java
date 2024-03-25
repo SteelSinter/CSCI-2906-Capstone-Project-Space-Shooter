@@ -14,15 +14,14 @@ abstract class Enemy extends GameObject {
 	}
 	
 	static void createEnemy(EnemyType type) {
+		createEnemy(type, 0, 0);
+	}
+	
+	static void createEnemy(EnemyType type, double x, double y) {
 		if (type == EnemyType.RIGHTTOLEFT) {
-			try {
-				game.addObject(new RightToLeft());
-			} catch (Exception e) {
-				System.out.println("Exception in createEnemy()");
-				e.printStackTrace();
-			}
-		} else if (type == EnemyType.SPINNER) {
-			
+			game.addObject(new RightToLeft(), x, y);
+		} else if (type == EnemyType.STAY) {
+			game.addObject(new Stay(), x, y);
 		}
 	}
 	
