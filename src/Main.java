@@ -1,11 +1,18 @@
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.awt.Toolkit;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javafx.embed.swing.SwingFXUtils;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -16,12 +23,14 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+	public static final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	public static final double SCREEN_WIDTH = screenSize.getWidth();
+	public static final double SCREEN_HEIGHT = screenSize.getHeight();
 	public Player player;
 	public static Pane background;
 	public static Pane pane;
@@ -29,7 +38,6 @@ public class Main extends Application {
 	public static Game game;
 	public static Text pointCounter;
 	public static Text lifeCounter;
-	
 
 	@Override
 	public void start(Stage mainStage) {
@@ -38,7 +46,7 @@ public class Main extends Application {
 		background = new Pane();
 		pane = new Pane();
 		pane.getChildren().addAll(background, pointCounter, lifeCounter);
-		scene = new Scene(pane, 700, 500);
+		scene = new Scene(pane, (SCREEN_WIDTH * 0.9), SCREEN_HEIGHT * 0.9);
 		scene.setFill(new ImagePattern(new Image("sprites/spr_background.png"), 0, 0, 64, 64, false));
 		lifeCounter.setStroke(Color.WHITE);
 		lifeCounter.setX(scene.getWidth() - (scene.getWidth() / 3));
@@ -85,6 +93,14 @@ public class Main extends Application {
 		return game;
 	}
 	
+	public static Image resizeImage(Image image, int targetWidth, int targetHeight) throws IOException {
+	    BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
+	    Graphics2D graphics2D = resizedImage.createGraphics();
+	    graphics2D.drawImage(SwingFXUtils.fromFXImage(image, null) , 0, 0, targetWidth, targetHeight, null);
+	    graphics2D.dispose();
+	    return SwingFXUtils.toFXImage(resizedImage, null);
+	}
+	
 	public static void main(String[] args) {
 		Application.launch(args);
 
@@ -109,6 +125,8 @@ class Game extends Thread {
 			new EnemyWave(25),
 	};
 	
+	public GameOrder gameOrder = new GameOrder();
+	
 	@Override
 	public void run() {
 		keys.put(KeyCode.W, false);
@@ -122,7 +140,7 @@ class Game extends Thread {
 		Main.scene.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.P) {
 				gamePaused = !gamePaused;
-				System.out.println("game pause");
+				System.out.println("Game paused");
 			}
 			try {
 				keys.put(e.getCode(), true);
@@ -141,14 +159,19 @@ class Game extends Thread {
 			}
 		});
 		
-		addObject(new Player());
+		try {
+			addObject(new Player());
+		} catch (IOException e1) {
+			System.out.println("Exception when adding player: ");
+			e1.printStackTrace();
+		}
 		System.out.println("Player added to scene.");
 		System.out.println("Game loop started");
 		while (gameRunning) {
 			if (!gamePaused) {
-				System.out.println("game not paused");
 				try {
 					startTime = System.currentTimeMillis();
+					gameOrder.next();
 					updateGame();
 					Platform.runLater(() -> {
 						drawSprites();
@@ -163,7 +186,7 @@ class Game extends Thread {
 					ex.printStackTrace();
 				}
 			} else {
-				System.out.println("game paused");
+				System.out.print(""); // Removing this breaks the pause button
 			}
 		}
 	}
@@ -180,7 +203,7 @@ class Game extends Thread {
 				o.update();
 			}
 		} catch (NullPointerException ex) {
-			System.out.println("Null pointer exception ");
+			System.out.println("Null pointer exception");
 		} finally {
 			lock.readLock().unlock();
 		}
@@ -201,7 +224,7 @@ class Game extends Thread {
 				}
 			}
 		} catch (NullPointerException ex) {
-			System.out.println("Null pointer exception ");
+			System.out.println("Null pointer exception");
 		} catch (Exception ex) {
 			System.out.println("Exception in drawSprites()");
 			ex.printStackTrace();
@@ -215,7 +238,7 @@ class Game extends Thread {
 			lock.writeLock().lock();
 			try {
 				gameObjects.add(o);
-				if (o.isEnemy()) {
+				if (o.isEnemy() || o instanceof Powerup) {
 					enemyObjects.add(o);
 				}
 				if (o instanceof Projectile && !o.isEnemy()) {
@@ -234,7 +257,7 @@ class Game extends Thread {
 			lock.writeLock().lock();
 			try {
 				gameObjects.add(o);
-				if (o.isEnemy()) {
+				if (o.isEnemy() || o instanceof Powerup) {
 					enemyObjects.add(o);
 				}
 				if (o instanceof Projectile && !o.isEnemy()) {
@@ -268,6 +291,37 @@ class Game extends Thread {
 	}
 }
 
-class SpriteRenderer {
+class GameOrder {
+	private LinkedList<Object> gameOrder = new LinkedList<Object>();
+	private int frameInterval;
+	Game game = Main.getGame();
 	
+	GameOrder() {
+		gameOrder.add(new EnemyWave(6));
+		gameOrder.add(new EnemyWave(8));
+		gameOrder.add(new EnemyWave(9));
+		gameOrder.add(new EnemyWave(12));
+		//gameOrder.add(new Powerup());
+		frameInterval = 0;
+	}
+	
+	protected void next() throws IOException {
+		frameInterval++;
+		if (!(frameInterval % 300 == 0)) {
+			return;
+		}
+		if (gameOrder.isEmpty()) {
+			gameOrder.add(new EnemyWave((int) (Math.random() * 10)));
+			return;
+		}
+		Object next = gameOrder.pop();
+		if (next instanceof Powerup) {
+			game.addObject((Powerup) next);
+			return;
+		}
+		if (next instanceof EnemyWave) {
+			((EnemyWave) next).startWave();
+			return;
+		}
+	}
 }

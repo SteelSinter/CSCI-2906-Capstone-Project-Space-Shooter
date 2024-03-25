@@ -1,6 +1,12 @@
 /**
  * @author James Jesus
  */
+
+
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -21,14 +27,12 @@ abstract class GameObject extends Rectangle {
 		setHeight(50);
 	}
 	
-	GameObject(Image sprite) {
+	GameObject(Image sprite) throws IOException {
 		game = Main.getGame();
-		this.sprite = sprite;
+		this.sprite = Main.resizeImage(sprite, (int) Main.SCREEN_WIDTH / 10, (int) Main.SCREEN_HEIGHT / 10);
 		speed = 1;
 		setFill(Color.TRANSPARENT);
 		setStroke(Color.RED);
-		setWidth(sprite.getWidth());
-		setHeight(sprite.getHeight());
 	}
 	
 	abstract void update();
@@ -54,6 +58,9 @@ abstract class GameObject extends Rectangle {
 		return false;
 	}
 	
+	/**
+	 * Toggle the visibility of the hitbox.
+	 */
 	public void toggleHitbox() {
 		hitboxVisible = !hitboxVisible;
 	}

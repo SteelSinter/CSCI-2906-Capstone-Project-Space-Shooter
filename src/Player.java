@@ -1,19 +1,20 @@
+
+import java.io.IOException;
+
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 
 public class Player extends GameObject {
 	private double fireRate = 1.5;
 	private double framesPassed = 0;
 	
-	Player() {
+	Player() throws IOException {
 		super(new Image("sprites/spr_player.png"));
 		speed = 2;
 		setHitboxVisible(true);
 		setHeight(sprite.getHeight() / 3);
 		setYOffset(-(sprite.getHeight() / 3));
+		
 	}
 	
 	public void update() {
@@ -27,7 +28,12 @@ public class Player extends GameObject {
 			framesPassed = 0;
 		
 		if (framesPassed == 1 || (framesPassed % (60 / fireRate)) == 0 && framesPassed != 0) {
-			shoot();
+			try {
+				shoot();
+			} catch (IOException e) {
+				System.out.println("Exception in shoot()");
+				e.printStackTrace();
+			}
 		}
 		
 		if (game.keys.get(KeyCode.W)) {
@@ -52,7 +58,7 @@ public class Player extends GameObject {
 		System.out.println("Player hit");
 	}
 	
-	public void shoot() {
+	public void shoot() throws IOException {
 		game.addObject(new Projectile(Direction.RIGHT, getX() + getWidth(), getY() + (getHeight() / 2)));
 	}
 	
@@ -61,8 +67,13 @@ public class Player extends GameObject {
 			game.lock.readLock().lock();
 			for (GameObject o: game.enemyObjects) {
 				if (colliding(o)) {
-					this.destroy();
-					o.destroy();
+					if (o instanceof Powerup) {
+						((Powerup) o).collect();
+						o.destroy();
+					} else {
+						this.destroy();
+						o.destroy();
+					}
 				}
 			}
 		} catch (NullPointerException ex) {

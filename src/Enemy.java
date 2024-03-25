@@ -1,18 +1,26 @@
+
+import java.io.IOException;
+
 import javafx.scene.image.Image;
 
 abstract class Enemy extends GameObject {
-	protected enum EnemyType {RIGHTTOLEFT, SPINNER, TRACKER}
+	protected enum EnemyType {RIGHTTOLEFT, SPINNER, TRACKER, STAY}
 	Direction direction;
 	
 	Enemy() {}
 	
-	Enemy(Image sprite) {
+	Enemy(Image sprite) throws IOException {
 		super(sprite);
 	}
 	
 	static void createEnemy(EnemyType type) {
 		if (type == EnemyType.RIGHTTOLEFT) {
-			game.addObject(new RightToLeft());
+			try {
+				game.addObject(new RightToLeft());
+			} catch (IOException e) {
+				System.out.println("Exception in createEnemy()");
+				e.printStackTrace();
+			}
 		} else if (type == EnemyType.SPINNER) {
 			
 		}
@@ -38,7 +46,7 @@ abstract class Enemy extends GameObject {
 
 class RightToLeft extends Enemy {
 	
-	RightToLeft() {
+	RightToLeft() throws IOException {
 		super(new Image("sprites/spr_enemy.png"));
 		isEnemy = true;
 		setHitboxVisible(true);
@@ -61,4 +69,24 @@ class RightToLeft extends Enemy {
 		isDead = true;
 	}
 	
+}
+
+class Stay extends Enemy {
+	private boolean stopped = false;
+	
+	Stay() throws IOException {
+		super(new Image("sprites/spr_stay"));
+	}
+
+	@Override
+	void update() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	void destroy() {
+		// TODO Auto-generated method stub
+		
+	}
 }

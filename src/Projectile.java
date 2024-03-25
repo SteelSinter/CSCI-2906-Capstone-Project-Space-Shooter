@@ -1,9 +1,12 @@
+
+import java.io.IOException;
+
 import javafx.scene.image.Image;
 
 public class Projectile extends GameObject {
 	Direction direction;
 
-	Projectile(Direction d, double x, double y) {
+	Projectile(Direction d, double x, double y) throws IOException {
 		super(new Image("sprites/spr_bullet.png"));
 		setX(x);
 		setY(y);
