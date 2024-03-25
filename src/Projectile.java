@@ -6,12 +6,13 @@ import javafx.scene.image.Image;
 public class Projectile extends GameObject {
 	Direction direction;
 
-	Projectile(Direction d, double x, double y) throws IOException {
+	Projectile(Direction d, double x, double y) {
 		super(new Image("sprites/spr_bullet.png"));
+		this.sprite = Main.resizeImage(getSprite(), (int) Main.SCREEN_WIDTH / 50, (int) Main.SCREEN_WIDTH / 100);
 		setX(x);
 		setY(y);
 		direction = d;
-		speed = 5;
+		speed = 10;
 		setHitboxVisible(true);
 	}
 	

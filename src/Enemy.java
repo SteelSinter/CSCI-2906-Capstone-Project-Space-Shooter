@@ -9,7 +9,7 @@ abstract class Enemy extends GameObject {
 	
 	Enemy() {}
 	
-	Enemy(Image sprite) throws IOException {
+	Enemy(Image sprite) {
 		super(sprite);
 	}
 	
@@ -17,7 +17,7 @@ abstract class Enemy extends GameObject {
 		if (type == EnemyType.RIGHTTOLEFT) {
 			try {
 				game.addObject(new RightToLeft());
-			} catch (IOException e) {
+			} catch (Exception e) {
 				System.out.println("Exception in createEnemy()");
 				e.printStackTrace();
 			}
@@ -46,13 +46,14 @@ abstract class Enemy extends GameObject {
 
 class RightToLeft extends Enemy {
 	
-	RightToLeft() throws IOException {
+	RightToLeft() {
 		super(new Image("sprites/spr_enemy.png"));
 		isEnemy = true;
 		setHitboxVisible(true);
-		setHeight(sprite.getHeight() / 3);
+		setWidth(sprite.getWidth());
+		setHeight(sprite.getHeight() / 4.3);
 		setYOffset(-(sprite.getHeight() / 3));
-		speed = 2;
+		speed = 4;
 	}
 
 	@Override
@@ -74,7 +75,7 @@ class RightToLeft extends Enemy {
 class Stay extends Enemy {
 	private boolean stopped = false;
 	
-	Stay() throws IOException {
+	Stay() {
 		super(new Image("sprites/spr_stay"));
 	}
 

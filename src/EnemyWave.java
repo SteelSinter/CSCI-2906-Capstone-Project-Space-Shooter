@@ -1,7 +1,7 @@
 import java.io.IOException;
+import Enemy.EnemyType;
 
 public class EnemyWave {
-	private enum EnemyType {RIGHTTOLEFT, STAY, SPIN}
 	public enum Formation {SQUARE, SINE, TRIANGLE}
 	private double startX = Main.scene.getWidth();
 	private double startY = Main.scene.getHeight() / 4;
@@ -40,7 +40,7 @@ public class EnemyWave {
 		}
 	}
 	
-	private void square(int count) throws IOException {
+	private void square(int count) {
 		Game game = Main.getGame();
 		System.out.println("Creating square wave of " + count + " enemies");
 		double x = startX, y = startY;
@@ -58,11 +58,11 @@ public class EnemyWave {
 				game.addObject(new RightToLeft(), x, y);
 				break;
 			}
-			if (i % 5 == 0 && i != 0) {
-				x += 50;
+			if (i % 6 == 0 && i != 0) {
+				x += Main.SCREEN_WIDTH / 10;
 				y = startY;
 			} else {
-				y += 50;
+				y += Main.SCREEN_HEIGHT / 10;
 			}
 			
 		}

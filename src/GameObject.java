@@ -27,9 +27,9 @@ abstract class GameObject extends Rectangle {
 		setHeight(50);
 	}
 	
-	GameObject(Image sprite) throws IOException {
+	GameObject(Image sprite) {
 		game = Main.getGame();
-		this.sprite = Main.resizeImage(sprite, (int) Main.SCREEN_WIDTH / 10, (int) Main.SCREEN_HEIGHT / 10);
+		this.sprite = Main.resizeImage(sprite, (int) Main.SCREEN_WIDTH / 10, (int) Main.SCREEN_WIDTH / 10);
 		speed = 1;
 		setFill(Color.TRANSPARENT);
 		setStroke(Color.RED);

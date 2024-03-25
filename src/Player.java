@@ -8,11 +8,12 @@ public class Player extends GameObject {
 	private double fireRate = 1.5;
 	private double framesPassed = 0;
 	
-	Player() throws IOException {
+	Player() {
 		super(new Image("sprites/spr_player.png"));
 		speed = 2;
 		setHitboxVisible(true);
-		setHeight(sprite.getHeight() / 3);
+		setHeight(sprite.getHeight() / 4.3);
+		setWidth(sprite.getWidth());
 		setYOffset(-(sprite.getHeight() / 3));
 		
 	}

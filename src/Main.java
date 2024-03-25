@@ -41,24 +41,29 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage mainStage) {
-		pointCounter = new Text("0");
-		lifeCounter = new Text("3");
-		background = new Pane();
-		pane = new Pane();
-		pane.getChildren().addAll(background, pointCounter, lifeCounter);
-		scene = new Scene(pane, (SCREEN_WIDTH * 0.9), SCREEN_HEIGHT * 0.9);
-		scene.setFill(new ImagePattern(new Image("sprites/spr_background.png"), 0, 0, 64, 64, false));
-		lifeCounter.setStroke(Color.WHITE);
-		lifeCounter.setX(scene.getWidth() - (scene.getWidth() / 3));
-		lifeCounter.setFont(new Font("", 23));
-		
-		mainStage.setScene(scene);
-		mainStage.setTitle("Space Shooter");
-		mainStage.show();
-		
-		game = new Game();
-		
-		game.start(); // start game thread
+		try {
+			pointCounter = new Text("0");
+			lifeCounter = new Text("3");
+			background = new Pane();
+			pane = new Pane();
+			pane.getChildren().addAll(background, pointCounter, lifeCounter);
+			scene = new Scene(pane, (SCREEN_WIDTH * 0.9), SCREEN_HEIGHT * 0.9);
+			scene.setFill(new ImagePattern(new Image("sprites/spr_background.png"), 0, 0, 64, 64, false));
+			lifeCounter.setStroke(Color.WHITE);
+			lifeCounter.setX(scene.getWidth() - (scene.getWidth() / 3));
+			lifeCounter.setFont(new Font("", 23));
+			
+			mainStage.setScene(scene);
+			mainStage.setTitle("Space Shooter");
+			mainStage.show();
+			
+			game = new Game();
+			
+			game.start(); // start game thread
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public static void addObject(ImageView i) {
@@ -93,12 +98,19 @@ public class Main extends Application {
 		return game;
 	}
 	
-	public static Image resizeImage(Image image, int targetWidth, int targetHeight) throws IOException {
-	    BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
-	    Graphics2D graphics2D = resizedImage.createGraphics();
-	    graphics2D.drawImage(SwingFXUtils.fromFXImage(image, null) , 0, 0, targetWidth, targetHeight, null);
-	    graphics2D.dispose();
-	    return SwingFXUtils.toFXImage(resizedImage, null);
+	public static Image resizeImage(Image image, int targetWidth, int targetHeight) {
+		try {
+			BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
+		    Graphics2D graphics2D = resizedImage.createGraphics();
+		    graphics2D.drawImage(SwingFXUtils.fromFXImage(image, null) , 0, 0, targetWidth, targetHeight, null);
+		    graphics2D.dispose();
+		    return SwingFXUtils.toFXImage(resizedImage, null);
+		} catch (Exception ex) {
+			System.out.println("Exception when resizing image: ");
+			ex.printStackTrace();
+			return null;
+		}
+	    
 	}
 	
 	public static void main(String[] args) {
@@ -160,8 +172,8 @@ class Game extends Thread {
 		});
 		
 		try {
-			addObject(new Player());
-		} catch (IOException e1) {
+			addObject(new Player(), Main.SCREEN_WIDTH / 9, Main.SCREEN_HEIGHT / 2 - (Main.SCREEN_HEIGHT / 10) / 2);
+		} catch (Exception e1) {
 			System.out.println("Exception when adding player: ");
 			e1.printStackTrace();
 		}
