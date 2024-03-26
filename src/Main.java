@@ -124,7 +124,7 @@ public class Main extends Application {
 }
 
 class Game extends Thread {
-	static int lives = 3;
+	static int lives = 3, points = 0;
 	private int respawnDelay = 0;
 	private final int FPS = 60;
 	private long startTime, endTime, duration;

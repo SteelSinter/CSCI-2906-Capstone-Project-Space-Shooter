@@ -13,7 +13,7 @@ public class Projectile extends GameObject {
 		setY(y);
 		direction = d;
 		speed = 10;
-		setHitboxVisible(true);
+		//setHitboxVisible(true);
 		this.isEnemy = false;
 	}
 
@@ -24,7 +24,7 @@ public class Projectile extends GameObject {
 		setY(y);
 		direction = d;
 		speed = 10;
-		setHitboxVisible(true);
+		//setHitboxVisible(true);
 		this.isEnemy = isEnemy;
 	}
 	

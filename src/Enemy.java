@@ -48,7 +48,7 @@ class RightToLeft extends Enemy {
 	RightToLeft() {
 		super(new Image("sprites/spr_enemy.png"));
 		isEnemy = true;
-		setHitboxVisible(true);
+		//setHitboxVisible(true);
 		setWidth(sprite.getWidth());
 		setHeight(sprite.getHeight() / 4.3);
 		setYOffset(-(sprite.getHeight() / 3));
@@ -67,6 +67,7 @@ class RightToLeft extends Enemy {
 	@Override
 	public void destroy() {
 		isDead = true;
+		game.addObject(new Explosion((int) getWidth(), (int) getWidth()), getX(), getY());
 	}
 	
 }
@@ -76,11 +77,12 @@ class Stay extends Enemy {
 	
 	Stay() {
 		super(new Image("sprites/spr_stay.png"));
+		isEnemy = true;
 		setWidth(sprite.getWidth() * .8);
 		setHeight(sprite.getHeight() * .8);
 		this.sprite = Main.resizeImage(sprite, (int) Main.SCREEN_WIDTH / 22, (int) Main.SCREEN_WIDTH / 22);
 		speed = 6;
-		this.setHitboxVisible(true);
+		//this.setHitboxVisible(true);
 	}
 
 	@Override
@@ -105,7 +107,7 @@ class Stay extends Enemy {
 	@Override
 	void destroy() {
 		this.isDead = true;
-		
+		game.addObject(new Explosion((int) getWidth(), (int) getWidth()), getX(), getY());
 	}
 
 	public void shoot() {

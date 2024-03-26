@@ -11,7 +11,7 @@ public class Player extends GameObject {
 	Player() {
 		super(new Image("sprites/spr_player.png"));
 		speed = 2;
-		setHitboxVisible(true);
+		//setHitboxVisible(true);
 		setHeight(sprite.getHeight() / 4.3);
 		setWidth(sprite.getWidth());
 		setYOffset(-(sprite.getHeight() / 3));
@@ -58,7 +58,7 @@ public class Player extends GameObject {
 		isDead = true;
         Game.playerDead = true;
 		Game.lives--;
-		game.addObject(new Explosion((int) getWidth(), (int) getWidth()), getX(), getY());
+		game.addObject(new Explosion((int) getWidth(), (int) getWidth()), getX(), getY() + getYOffset());
 	}
 	
 	public void shoot() throws IOException {
