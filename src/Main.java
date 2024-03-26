@@ -122,8 +122,11 @@ public class Main extends Application {
 }
 
 class Game extends Thread {
+	static int lives = 3;
+	private int respawnDelay = 0;
 	private final int FPS = 60;
 	private long startTime, endTime, duration;
+	public static boolean playerDead = false;
 	public static boolean gameRunning = true;
 	public static boolean gamePaused = false;
 	final ReadWriteLock lock = new ReentrantReadWriteLock();
@@ -184,6 +187,22 @@ class Game extends Thread {
 			if (!gamePaused) {
 				try {
 					startTime = System.currentTimeMillis();
+					if (lives <=0) {
+						System.out.println("gameOver");
+					}
+					if (playerDead) {
+						respawnDelay++;
+					}
+					if (playerDead && respawnDelay >= 150) {
+						try {
+							addObject(new Player(), Main.SCREEN_WIDTH / 9, Main.SCREEN_HEIGHT / 2 - (Main.SCREEN_HEIGHT / 10) / 2);
+							playerDead = false;
+							respawnDelay = 0;
+						} catch (Exception e1) {
+							System.out.println("Exception when adding player: ");
+							e1.printStackTrace();
+						}
+					}
 					gameOrder.next();
 					updateGame();
 					if (enemyObjects.isEmpty()) {

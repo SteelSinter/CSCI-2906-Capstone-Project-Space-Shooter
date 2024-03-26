@@ -56,6 +56,8 @@ public class Player extends GameObject {
 	@Override
 	public void destroy() {
 		isDead = true;
+        Game.playerDead = true;
+		Game.lives--;
 		System.out.println("Player hit");
 	}
 	
