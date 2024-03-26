@@ -29,7 +29,7 @@ abstract class GameObject extends Rectangle {
 	
 	GameObject(Image sprite) {
 		game = Main.getGame();
-		this.sprite = Main.resizeImage(sprite, (int) Main.SCREEN_WIDTH / 12, (int) Main.SCREEN_WIDTH / 12);
+		this.sprite = Main.resizeImage(sprite, (int) Main.SCREEN_WIDTH / 18, (int) Main.SCREEN_WIDTH / 18);
 		speed = 1;
 		setFill(Color.TRANSPARENT);
 		setStroke(Color.RED);

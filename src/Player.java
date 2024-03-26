@@ -58,11 +58,10 @@ public class Player extends GameObject {
 		isDead = true;
         Game.playerDead = true;
 		Game.lives--;
-		System.out.println("Player hit");
 	}
 	
 	public void shoot() throws IOException {
-		game.addObject(new Projectile(Direction.RIGHT, getX() + getWidth(), getY() + (getHeight() / 2)));
+		game.addObject(new Projectile(Direction.RIGHT, getX() + getWidth(), getY() + (getHeight() / 2), false));
 	}
 	
 	public void checkCollisions() {
@@ -76,6 +75,7 @@ public class Player extends GameObject {
 					} else {
 						this.destroy();
 						o.destroy();
+						System.out.println("Player hit by " + o.toString());
 					}
 				}
 			}

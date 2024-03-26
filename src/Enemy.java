@@ -72,21 +72,40 @@ class RightToLeft extends Enemy {
 }
 
 class Stay extends Enemy {
-	private boolean stopped = false;
+	private int updates, fireDelay = 0;
 	
 	Stay() {
 		super(new Image("sprites/spr_stay.png"));
+		this.sprite = Main.resizeImage(sprite, (int) Main.SCREEN_WIDTH / 22, (int) Main.SCREEN_WIDTH / 22);
+		speed = 6;
 	}
 
 	@Override
 	void update() {
-		// TODO Auto-generated method stub
-		
+		checkCollisions();
+		if (updates >= 100) {
+			if (fireDelay >= 100) {
+				shoot();
+				fireDelay = 0;
+			} else {
+				fireDelay++;
+			}
+
+		} else {
+			setX(getX() - 1 * speed);
+			updates++;
+		}
+
+
 	}
 
 	@Override
 	void destroy() {
-		// TODO Auto-generated method stub
+		this.isDead = true;
 		
+	}
+
+	public void shoot() {
+		game.addObject(new Projectile(Direction.LEFT, getX() + (getWidth() / 2), getY() + (getHeight() / 2), true));
 	}
 }

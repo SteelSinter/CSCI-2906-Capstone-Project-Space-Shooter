@@ -7,6 +7,10 @@ public class Projectile extends GameObject {
 	Direction direction;
 
 	Projectile(Direction d, double x, double y) {
+		this(d, x, y, false);
+	}
+
+	Projectile(Direction d, double x, double y, boolean isEnemy) {
 		super(new Image("sprites/spr_bullet.png"));
 		this.sprite = Main.resizeImage(getSprite(), (int) Main.SCREEN_WIDTH / 50, (int) Main.SCREEN_WIDTH / 120);
 		setX(x);
@@ -14,6 +18,7 @@ public class Projectile extends GameObject {
 		direction = d;
 		speed = 10;
 		setHitboxVisible(true);
+		this.isEnemy = true;
 	}
 	
 	@Override
@@ -34,12 +39,17 @@ public class Projectile extends GameObject {
 		}
 		
 		if (isOffScreen())
-			game.removeObject(this);
+			this.isDead = true;
 	}
 	
 	@Override
 	public void destroy() {
 		isDead = true;
+	}
+
+	@Override
+	public String toString() {
+		return "Projectile direction:" + direction + " enemy:" + isEnemy;
 	}
 
 }

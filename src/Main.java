@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -195,6 +196,8 @@ class Game extends Thread {
 					}
 					if (playerDead && respawnDelay >= 150) {
 						try {
+							enemyObjects.clear();
+							playerProjectiles.clear();
 							addObject(new Player(), Main.SCREEN_WIDTH / 9, Main.SCREEN_HEIGHT / 2 - (Main.SCREEN_HEIGHT / 10) / 2);
 							playerDead = false;
 							respawnDelay = 0;
@@ -328,6 +331,7 @@ class Game extends Thread {
 
 class GameOrder {
 	private LinkedList<Object> gameOrder = new LinkedList<Object>();
+	public static Enemy.EnemyType[] enemyTypes = Enemy.EnemyType.values();
 	private int frameInterval;
 	Game game = Main.getGame();
 	
@@ -352,7 +356,18 @@ class GameOrder {
 			return;
 		}
 		if (gameOrder.isEmpty()) {
-			gameOrder.add(new EnemyWave((int) (Math.random() * 10)));
+			Enemy.EnemyType type = Enemy.EnemyType.RIGHTTOLEFT;
+			boolean containsStay = false;
+			for (GameObject e: Main.getGame().enemyObjects) {
+				if (e instanceof Stay) {
+					containsStay = true;
+					break;
+				}
+			}
+			if (!containsStay) {
+				type = Enemy.EnemyType.STAY;
+			}
+			gameOrder.add(new EnemyWave((int) (Math.random() * 20), type, EnemyWave.Formation.SQUARE));
 			return;
 		}
 		Object next = gameOrder.pop();
