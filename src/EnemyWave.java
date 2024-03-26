@@ -43,9 +43,10 @@ public class EnemyWave {
 		Game game = Main.getGame();
 		System.out.println("Creating square wave of " + count + " enemies");
 		double x = startX, y = startY;
-		x += ((int) (Math.random() * 100)) - 50;
-		y += ((int) (Math.random() * 100)) - 50;
+
 		for (int i = 0; i < count; i++) {
+			x += ((int) (Math.random() * 100)) - 50;
+			y += ((int) (Math.random() * 100)) - 50;
 			Enemy.createEnemy(type, x, y);
 			if (i % 6 == 0 && i != 0) {
 				x += Main.SCREEN_WIDTH / 10;

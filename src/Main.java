@@ -213,7 +213,12 @@ class Game extends Thread {
 						gameOrder.nextWave();
 					}
 					Platform.runLater(() -> {
-						drawSprites();
+						try {
+							drawSprites();
+						} catch (Exception ex) {
+
+						}
+
 					});
 					endTime = System.currentTimeMillis();
 					duration = endTime - startTime;
@@ -341,7 +346,7 @@ class GameOrder {
 	Game game = Main.getGame();
 	
 	GameOrder() {
-		gameOrder.add(new EnemyWave(5, Enemy.EnemyType.STAY, EnemyWave.Formation.SQUARE));
+		gameOrder.add(new EnemyWave(15, Enemy.EnemyType.STAY, EnemyWave.Formation.SQUARE));
 		gameOrder.add(new EnemyWave(6));
 		gameOrder.add(new EnemyWave(8));
 		gameOrder.add(new EnemyWave(9));

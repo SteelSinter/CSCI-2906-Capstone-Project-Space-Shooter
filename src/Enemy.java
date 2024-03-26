@@ -73,7 +73,7 @@ class RightToLeft extends Enemy {
 }
 
 class Stay extends Enemy {
-	private int updates, fireDelay = 0;
+	private int updates, fireDelay = 0, randFireOffset = ((int) (Math.random() * 100));
 	
 	Stay() {
 		super(new Image("sprites/spr_stay.png"));
@@ -82,6 +82,7 @@ class Stay extends Enemy {
 		setHeight(sprite.getHeight() * .8);
 		this.sprite = Main.resizeImage(sprite, (int) Main.SCREEN_WIDTH / 22, (int) Main.SCREEN_WIDTH / 22);
 		speed = 6;
+		fireDelay += randFireOffset;
 		//this.setHitboxVisible(true);
 	}
 
