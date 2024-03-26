@@ -15,6 +15,7 @@ import javafx.embed.swing.SwingFXUtils;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.scene.DepthTest;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -255,7 +256,11 @@ class Game extends Thread {
 			Main.background.getChildren().clear();
 			
 			for (GameObject o: gameObjects) {
-				Main.addObject(new ImageView(o.getSprite()), o.getX() + o.getXOffset(), o.getY() + o.getYOffset());
+				ImageView newNode = new ImageView(o.getSprite());
+				Main.addObject(newNode, o.getX() + o.getXOffset(), o.getY() + o.getYOffset());
+				if (o instanceof Projectile) {
+					newNode.setTranslateZ(-1);
+				}
 				// If the hitbox is visible, add it to the scene
 				if (o.hitboxVisible()) {
 					Main.addObject((Rectangle) o, o.getX(), o.getY());
@@ -350,24 +355,14 @@ class GameOrder {
 	}
 	
 	protected void next() throws IOException {
+		Enemy.EnemyType nextType = Enemy.EnemyType.RIGHTTOLEFT;
 		//System.out.println(frameInterval);
 		frameInterval++;
 		if (!(frameInterval % 300 == 0)) {
 			return;
 		}
 		if (gameOrder.isEmpty()) {
-			Enemy.EnemyType type = Enemy.EnemyType.RIGHTTOLEFT;
-			boolean containsStay = false;
-			for (GameObject e: Main.getGame().enemyObjects) {
-				if (e instanceof Stay) {
-					containsStay = true;
-					break;
-				}
-			}
-			if (!containsStay) {
-				type = Enemy.EnemyType.STAY;
-			}
-			gameOrder.add(new EnemyWave((int) (Math.random() * 20), type, EnemyWave.Formation.SQUARE));
+			gameOrder.add(new EnemyWave((int) (Math.random() * 20), nextType, EnemyWave.Formation.SQUARE));
 			return;
 		}
 		Object next = gameOrder.pop();
@@ -378,6 +373,12 @@ class GameOrder {
 		if (next instanceof EnemyWave) {
 			((EnemyWave) next).startWave();
 			return;
+		}
+
+		if (nextType == Enemy.EnemyType.RIGHTTOLEFT) {
+			nextType = Enemy.EnemyType.STAY;
+		} else {
+			nextType = Enemy.EnemyType.RIGHTTOLEFT;
 		}
 	}
 }

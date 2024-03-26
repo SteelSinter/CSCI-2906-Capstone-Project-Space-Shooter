@@ -7,18 +7,25 @@ public class Projectile extends GameObject {
 	Direction direction;
 
 	Projectile(Direction d, double x, double y) {
-		this(d, x, y, false);
-	}
-
-	Projectile(Direction d, double x, double y, boolean isEnemy) {
 		super(new Image("sprites/spr_bullet.png"));
-		this.sprite = Main.resizeImage(getSprite(), (int) Main.SCREEN_WIDTH / 50, (int) Main.SCREEN_WIDTH / 120);
+		this.sprite = Main.resizeImage(getSprite(), (int) Main.SCREEN_WIDTH / 60, (int) Main.SCREEN_WIDTH / 180);
 		setX(x);
 		setY(y);
 		direction = d;
 		speed = 10;
 		setHitboxVisible(true);
-		this.isEnemy = true;
+		this.isEnemy = false;
+	}
+
+	Projectile(Direction d, double x, double y, boolean isEnemy) {
+		super(new Image("sprites/spr_bullet.png"));
+		this.sprite = Main.resizeImage(getSprite(), (int) Main.SCREEN_WIDTH / 60, (int) Main.SCREEN_WIDTH / 120);
+		setX(x);
+		setY(y);
+		direction = d;
+		speed = 10;
+		setHitboxVisible(true);
+		this.isEnemy = isEnemy;
 	}
 	
 	@Override

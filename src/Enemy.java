@@ -76,8 +76,11 @@ class Stay extends Enemy {
 	
 	Stay() {
 		super(new Image("sprites/spr_stay.png"));
+		setWidth(sprite.getWidth() * .8);
+		setHeight(sprite.getHeight() * .8);
 		this.sprite = Main.resizeImage(sprite, (int) Main.SCREEN_WIDTH / 22, (int) Main.SCREEN_WIDTH / 22);
 		speed = 6;
+		this.setHitboxVisible(true);
 	}
 
 	@Override

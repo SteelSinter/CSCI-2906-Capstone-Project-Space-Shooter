@@ -58,6 +58,7 @@ public class Player extends GameObject {
 		isDead = true;
         Game.playerDead = true;
 		Game.lives--;
+		game.addObject(new Explosion((int) getWidth(), (int) getWidth()), getX(), getY());
 	}
 	
 	public void shoot() throws IOException {

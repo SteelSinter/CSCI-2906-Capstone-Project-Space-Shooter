@@ -3,7 +3,7 @@ import java.io.IOException;
 public class EnemyWave {
 	public enum Formation {SQUARE, SINE, TRIANGLE}
 	private double startX = Main.scene.getWidth();
-	private double startY = Main.scene.getHeight() / 4;
+	private double startY = Main.scene.getHeight() / 10;
 	private boolean mustKillAll; // If the player needs to kill all of them to progress
 	private Formation formation;
 	private Enemy.EnemyType type;
