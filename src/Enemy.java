@@ -80,7 +80,7 @@ class RightToLeft extends Enemy {
 }
 
 class Stay extends Enemy {
-	private int updates, fireDelay = 0, randFireOffset = ((int) (Math.random() * 100));
+	private int updates, fireDelay = 0, randFireOffset = ((int) (Math.random() * 100)), shotsTaken;
 	
 	Stay() {
 		super(new Image("sprites/spr_stay.png"));
@@ -96,9 +96,13 @@ class Stay extends Enemy {
 	@Override
 	void update() {
 		checkCollisions();
+		if (shotsTaken >= 5) {
+			updates = 0;
+		}
 		if (updates >= 100) {
 			if (fireDelay >= 100) {
 				shoot();
+				shotsTaken++;
 				fireDelay = 0;
 			} else {
 				fireDelay++;

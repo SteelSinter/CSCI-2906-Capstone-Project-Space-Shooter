@@ -129,7 +129,7 @@ public class Main extends Application {
 
 class Game extends Thread {
 	static int lives = 3;
-	private int points = 0;
+	private int points = 0, waveDelay;
 	private int respawnDelay = 0;
 	private final int FPS = 60;
 	private long startTime, endTime, duration;
@@ -215,7 +215,15 @@ class Game extends Thread {
 					gameOrder.next();
 					updateGame();
 					if (enemyObjects.isEmpty()) {
-						gameOrder.nextWave();
+						if (waveDelay == 0) {
+							gameOrder.nextWave();
+							System.out.println("No enemies on screen");
+						}
+						waveDelay++;
+
+					}
+					if (!enemyObjects.isEmpty()) {
+						waveDelay = 0;
 					}
 					Platform.runLater(() -> {
 						try {
@@ -354,15 +362,15 @@ class Game extends Thread {
 
 class GameOrder {
 	private LinkedList<Object> gameOrder = new LinkedList<Object>();
+	private LinkedList<Object> gameOrderStay = new LinkedList<Object>();
 	public static Enemy.EnemyType[] enemyTypes = Enemy.EnemyType.values();
+	Enemy.EnemyType nextType = null;
 	private int frameInterval;
 	Game game = Main.getGame();
 	
 	GameOrder() {
 		gameOrder.add(new EnemyWave(15, Enemy.EnemyType.STAY, EnemyWave.Formation.SQUARE));
 		gameOrder.add(new EnemyWave(6));
-		gameOrder.add(new EnemyWave(8));
-		gameOrder.add(new EnemyWave(9));
 		gameOrder.add(new EnemyWave(12));
 		//gameOrder.add(new Powerup());
 		frameInterval = 0;
@@ -373,14 +381,39 @@ class GameOrder {
 	}
 	
 	protected void next() throws IOException {
-		Enemy.EnemyType nextType = Enemy.EnemyType.RIGHTTOLEFT;
 		//System.out.println(frameInterval);
 		frameInterval++;
-		if (!(frameInterval % 300 == 0)) {
+		if (!(frameInterval % 200 == 0)) {
 			return;
 		}
+		try {
+			if(Main.getGame().enemyObjects.size() < 8) {
+				int stayCount = 0;
+				for (GameObject o: Main.getGame().enemyObjects) {
+					if (o instanceof Stay) {
+						stayCount++;
+					}
+				}
+
+				if (stayCount < 5) {
+					gameOrder.add(new EnemyWave((int) (Math.random() * 20) + 6, Enemy.EnemyType.STAY, EnemyWave.Formation.SQUARE));
+				}
+			}
+		} catch (Exception ex) {
+			System.out.println("Stay count error");
+		}
+
 		if (gameOrder.isEmpty()) {
-			gameOrder.add(new EnemyWave((int) (Math.random() * 20), nextType, EnemyWave.Formation.SQUARE));
+			if (nextType == null) {
+				nextType = Enemy.EnemyType.RIGHTTOLEFT;
+			}
+			System.out.println("adding wave of type " + nextType);
+			gameOrder.add(new EnemyWave((int) (Math.random() * 20) + 6, nextType, EnemyWave.Formation.SQUARE));
+			if (nextType == Enemy.EnemyType.RIGHTTOLEFT) {
+				nextType = Enemy.EnemyType.STAY;
+			} else {
+				nextType = Enemy.EnemyType.RIGHTTOLEFT;
+			}
 			return;
 		}
 		Object next = gameOrder.pop();
