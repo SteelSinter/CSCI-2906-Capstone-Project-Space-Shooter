@@ -32,6 +32,13 @@ abstract class Enemy extends GameObject {
 				if (colliding(o)) {
 					this.destroy();
 					o.destroy();
+					if (this instanceof RightToLeft) {
+						game.addPoints(1000);
+						Main.pointCounter.setText(String.valueOf(game.getPoints()));
+					} else if (this instanceof Stay) {
+						game.addPoints(500);
+						Main.pointCounter.setText(String.valueOf(game.getPoints()));
+					}
 				}
 			}
 		} catch (NullPointerException ex) {

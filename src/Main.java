@@ -55,6 +55,10 @@ public class Main extends Application {
 			lifeCounter.setStroke(Color.WHITE);
 			lifeCounter.setX(scene.getWidth() - (scene.getWidth() / 3));
 			lifeCounter.setFont(new Font("", 23));
+			pointCounter.setStroke(Color.WHITE);
+			pointCounter.setFill(Color.WHITE);
+			pointCounter.setY(Main.SCREEN_HEIGHT / 20);
+			pointCounter.setFont(new Font(50));
 			
 			mainStage.setScene(scene);
 			mainStage.setTitle("Space Shooter");
@@ -124,7 +128,8 @@ public class Main extends Application {
 }
 
 class Game extends Thread {
-	static int lives = 3, points = 0;
+	static int lives = 3;
+	private int points = 0;
 	private int respawnDelay = 0;
 	private final int FPS = 60;
 	private long startTime, endTime, duration;
@@ -336,6 +341,14 @@ class Game extends Thread {
 				lock.writeLock().unlock();
 			}
 		}).start();
+	}
+
+	public void addPoints(int amount) {
+		points += amount;
+	}
+
+	public int getPoints() {
+		return points;
 	}
 }
 
