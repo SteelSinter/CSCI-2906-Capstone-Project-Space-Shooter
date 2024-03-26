@@ -11,6 +11,9 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * Abstract class that defines all the functionality of every visual object in the game.
+ */
 abstract class GameObject extends Rectangle {
 	enum Direction {UP, DOWN, LEFT, RIGHT}
 	protected static Game game;
@@ -34,11 +37,21 @@ abstract class GameObject extends Rectangle {
 		setFill(Color.TRANSPARENT);
 		setStroke(Color.RED);
 	}
-	
+
+	/**
+	 * Defines how to update the object.
+	 */
 	abstract void update();
-	
+
+	/**
+	 * Defines what to do when the object is removed. USE isdead = true instead of Main.removeObject().
+	 */
 	abstract void destroy();
-	
+
+	/**
+	 * Check if the object is off screen.
+	 * @return
+	 */
 	public boolean isOffScreen() {
 		return (getX() < 0 - sprite.getWidth() ||
 				getX() > Main.scene.getWidth() ||
@@ -72,11 +85,19 @@ abstract class GameObject extends Rectangle {
 			hitboxVisible = false;
 		}
 	}
-	
+
+	/**
+	 * Set the x offset of the sprite.
+	 * @param d
+	 */
 	public void setXOffset(double d) {
 		this.xOffset = d;
 	}
-	
+
+	/**
+	 * Set the y offset of the sprite.
+	 * @param d
+	 */
 	public void setYOffset(double d) {
 		this.yOffset = d;
 	}
@@ -88,7 +109,11 @@ abstract class GameObject extends Rectangle {
 	public double getYOffset() {
 		return yOffset;
 	}
-	
+
+	/**
+	 * Check if this enemy is dead.
+	 * @return
+	 */
 	public boolean isDead() {
 		return isDead;
 	}

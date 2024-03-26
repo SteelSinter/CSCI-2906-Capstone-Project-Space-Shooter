@@ -4,6 +4,9 @@ import java.io.IOException;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 
+/**
+ * Player class.
+ */
 public class Player extends GameObject {
 	private double fireRate = 1.5;
 	private double framesPassed = 0;

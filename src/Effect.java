@@ -2,6 +2,9 @@ import javafx.scene.image.Image;
 
 import java.util.LinkedList;
 
+/**
+ * Visual effect that does not interact with anything.
+ */
 public abstract class Effect extends GameObject {
 	LinkedList<Image> sprites = new LinkedList<Image>();
 	int currentSprite;
@@ -9,6 +12,9 @@ public abstract class Effect extends GameObject {
 
 }
 
+/**
+ * Explosion effect.
+ */
 class Explosion extends Effect {
 	Explosion(int width, int height) {
 		sprites.add(Main.resizeImage(new Image("sprites/spr_explosion1.png"), width, height));

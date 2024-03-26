@@ -1,5 +1,8 @@
 import java.io.IOException;
 
+/**
+ * Defines a type of enemy to be created in a specific pattern.
+ */
 public class EnemyWave {
 	public enum Formation {SQUARE, SINE, TRIANGLE}
 	private double startX = Main.scene.getWidth();
@@ -9,8 +12,13 @@ public class EnemyWave {
 	private Enemy.EnemyType type;
 	private static Game game;
 	private int count;
-	
-	
+
+	/**
+	 * Create an enemy wave.
+	 * @param count
+	 * @param type
+	 * @param formation
+	 */
 	EnemyWave(int count, Enemy.EnemyType type, Formation formation) {
 		game = Main.getGame();
 		this.count = count;
@@ -24,7 +32,11 @@ public class EnemyWave {
 		formation = Formation.SQUARE;
 		type = Enemy.EnemyType.RIGHTTOLEFT;
 	}
-	
+
+	/**
+	 * Start the wave.
+	 * @throws IOException
+	 */
 	public void startWave() throws IOException {
 		switch (formation) {
 		case SQUARE:
@@ -38,7 +50,11 @@ public class EnemyWave {
 			break;
 		}
 	}
-	
+
+	/**
+	 * Create a wave in a square shape.
+	 * @param count
+	 */
 	private void square(int count) {
 		Game game = Main.getGame();
 		System.out.println("Creating square wave of " + count + " enemies");

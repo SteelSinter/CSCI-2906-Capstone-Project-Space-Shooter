@@ -3,12 +3,19 @@ import java.io.IOException;
 
 import javafx.scene.image.Image;
 
+/**
+ * Enemy
+ */
 abstract class Enemy extends GameObject {
 	protected enum EnemyType {RIGHTTOLEFT, SPINNER, TRACKER, STAY}
 	Direction direction;
 	
 	Enemy() {}
-	
+
+	/**
+	 * Create an enemy with a sprite.
+	 * @param sprite
+	 */
 	Enemy(Image sprite) {
 		super(sprite);
 	}
@@ -16,7 +23,13 @@ abstract class Enemy extends GameObject {
 	static void createEnemy(EnemyType type) {
 		createEnemy(type, 0, 0);
 	}
-	
+
+	/**
+	 * Create an enemy at the given location.
+	 * @param type Enemy type
+	 * @param x x coordinate
+	 * @param y y coordinate
+	 */
 	static void createEnemy(EnemyType type, double x, double y) {
 		if (type == EnemyType.RIGHTTOLEFT) {
 			game.addObject(new RightToLeft(), x, y);
@@ -24,7 +37,10 @@ abstract class Enemy extends GameObject {
 			game.addObject(new Stay(), x, y);
 		}
 	}
-	
+
+	/**
+	 * Check if this is colliding with and player projectiles.
+	 */
 	public void checkCollisions() {
 		try {
 			game.lock.readLock().lock();
@@ -50,6 +66,9 @@ abstract class Enemy extends GameObject {
 
 }
 
+/**
+ * A simple enemy that moves across the screen from right to left.
+ */
 class RightToLeft extends Enemy {
 	
 	RightToLeft() {
@@ -79,6 +98,9 @@ class RightToLeft extends Enemy {
 	
 }
 
+/**
+ * An enemy that stops moving and shoots a few times before continuing off screen.
+ */
 class Stay extends Enemy {
 	private int updates, fireDelay = 0, randFireOffset = ((int) (Math.random() * 100)), shotsTaken;
 	

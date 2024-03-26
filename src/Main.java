@@ -127,6 +127,9 @@ public class Main extends Application {
 
 }
 
+/**
+ * Thread for game loop.
+ */
 class Game extends Thread {
 	static int lives = 3;
 	private int points = 0, waveDelay;
@@ -247,7 +250,10 @@ class Game extends Thread {
 			}
 		}
 	}
-	
+
+	/**
+	 * Update every object in the game.
+	 */
 	public void updateGame() {
 		try {
 			lock.readLock().lock();
@@ -266,7 +272,10 @@ class Game extends Thread {
 		}
 		
 	}
-	
+
+	/** Draw the sprites of every object.
+	 *
+	 */
 	public void drawSprites() {
 		try {
 			lock.readLock().lock();
@@ -293,7 +302,11 @@ class Game extends Thread {
 			lock.readLock().unlock();
 		}
 	}
-	
+
+	/**
+	 * Add an object to the game.
+	 * @param o GameObject to add.
+	 */
 	public void addObject(GameObject o) {
 		new Thread(() -> {
 			lock.writeLock().lock();
@@ -312,7 +325,13 @@ class Game extends Thread {
 		
 		
 	}
-	
+
+	/**
+	 * Add an object at the given x and y.
+	 * @param o
+	 * @param x
+	 * @param y
+	 */
 	public void addObject(GameObject o, double x, double y) {
 		new Thread(() -> {
 			lock.writeLock().lock();
@@ -333,7 +352,11 @@ class Game extends Thread {
 		
 		
 	}
-	
+
+	/**
+	 * Remove the object from the game.
+	 * @param o
+	 */
 	public void removeObject(GameObject o) {
 		new Thread(() -> {
 			lock.writeLock().lock();
@@ -351,6 +374,10 @@ class Game extends Thread {
 		}).start();
 	}
 
+	/**
+	 * Add points to the counter.
+	 * @param amount
+	 */
 	public void addPoints(int amount) {
 		points += amount;
 	}
@@ -367,7 +394,10 @@ class GameOrder {
 	Enemy.EnemyType nextType = null;
 	private int frameInterval;
 	Game game = Main.getGame();
-	
+
+	/**
+	 * Add waves manually with gameOrder.add();
+	 */
 	GameOrder() {
 		gameOrder.add(new EnemyWave(15, Enemy.EnemyType.STAY, EnemyWave.Formation.SQUARE));
 		gameOrder.add(new EnemyWave(6));
@@ -375,11 +405,18 @@ class GameOrder {
 		//gameOrder.add(new Powerup());
 		frameInterval = 0;
 	}
-	
+
+	/**
+	 * Skip to the next wave.
+	 */
 	protected void nextWave() {
 		frameInterval = 299;
 	}
-	
+
+	/**
+	 * Start the next wave after a certain amount of frames.
+	 * @throws IOException
+	 */
 	protected void next() throws IOException {
 		//System.out.println(frameInterval);
 		frameInterval++;
